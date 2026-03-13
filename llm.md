@@ -8,7 +8,6 @@ This folder contains configuration files (dotfiles) for:
 - **Shell Theme**: `.p10k.zsh` (Powerlevel10k)
 - **Git**: `.gitconfig`
 - **Terminal**: `.wezterm.lua` (WezTerm)
-- **XDG Configs**: `.config/` folder (includes nvim, etc.)
 
 ---
 
@@ -24,7 +23,7 @@ Create symbolic links from the home directory to these files. Use the following 
 
 ```bash
 cd ~/dottofiles
-for item in .zshrc .zprofile .zshenv .p10k.zsh .gitconfig .wezterm.lua .config; do
+for item in .zshrc .zprofile .zshenv .p10k.zsh .gitconfig .wezterm.lua; do
   # Backup existing files if they are not symlinks
   if [ -e ~/"$item" ] && [ ! -L ~/"$item" ]; then
     mv ~/"$item" ~/"$item.bak"
