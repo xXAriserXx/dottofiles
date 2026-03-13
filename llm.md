@@ -33,21 +33,69 @@ for item in zshrc zprofile zshenv p10k.zsh gitconfig wezterm.lua; do
 done
 ```
 
-### 3. Install Core Dependencies
-Many of these configurations depend on the following tools. Install them via Homebrew:
+### 3. Install Prerequisites
+These are the tools referenced across the dotfiles. Install them **before** symlinking so the shell can source everything cleanly.
 
 ```bash
 # Install Homebrew if not present
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# Install core tools
-brew install nvm nvim tmux fzf ripgrep
-brew install --cask wezterm visual-studio-code
 ```
 
+#### 3a. Core CLI tools
+```bash
+brew install nvm neovim tmux fzf ripgrep jq pnpm gh
+```
+
+| Tool | Why it's needed |
+|------|----------------|
+| **nvm** | Node version manager — loaded in `zshrc` |
+| **neovim** | Default `$EDITOR`, aliased as `n` |
+| **tmux** | Terminal multiplexer — several `tms`/`tuni` aliases |
+| **fzf** | Fuzzy finder |
+| **ripgrep** | Fast grep replacement |
+| **jq** | JSON processor — used by the `gcom()` AI-commit function |
+| **pnpm** | Package manager — `ike`, `bd`, `pi` aliases |
+| **gh** | GitHub CLI — `ghls` alias |
+
+#### 3b. GUI applications
+```bash
+brew install --cask wezterm visual-studio-code docker
+```
+
+| App | Why it's needed |
+|-----|----------------|
+| **WezTerm** | Primary terminal — configured by `wezterm.lua` |
+| **Visual Studio Code** | Editor — aliased as `nv` (`code -n`) |
+| **Docker** | Container runtime — `dcu`, `dcublor` aliases and `start_zeus()` |
+
+#### 3c. Zsh theme (Powerlevel10k)
+```bash
+brew install powerlevel10k
+```
+Sourced directly from `/opt/homebrew/share/powerlevel10k/` in `zshrc`.
+
+#### 3d. Media & utility tools (optional)
+These are used by various aliases. Install any you need:
+
+```bash
+brew install yt-dlp mpv blueutil switchaudio-osx
+```
+
+| Tool | Why it's needed |
+|------|----------------|
+| **yt-dlp** | YouTube downloader — `yt`, `ytm`, `ytmm` aliases |
+| **mpv** | Media player — `mu` (audio), `vi` (video) aliases |
+| **blueutil** | Bluetooth control — `blip`, `blco` aliases |
+| **switchaudio-osx** | Audio output switching — `switch`, `switchMic`, `alexa` aliases |
+
 ### 4. Install Fonts
-The WezTerm and P10k configurations require **MesloLGS Nerd Font**.
+The WezTerm and P10k configurations require **MesloLGS Nerd Font Mono**.
 Download and install the 4 TTF files from the [Powerlevel10k GitHub](https://github.com/romkatv/powerlevel10k#manual-font-installation).
+
+Or via Homebrew:
+```bash
+brew install --cask font-meslo-lg-nerd-font
+```
 
 ### 5. Finalize Zsh
 Restart the shell to apply changes:
