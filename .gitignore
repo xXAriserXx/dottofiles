@@ -1,0 +1,22 @@
+# OS files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# GWS / Google Cloud Secrets & Logs
+.config/gcloud/logs/
+.config/gws/client_secret.json
+.config/gws/credentials.enc
+.config/gws/token_cache.json
+.config/gws/.encryption_key
+.config/gws/cache/
+
+# FileZilla state
+.config/filezilla/lockfile
+.config/filezilla/queue.sqlite3
+
+# GitHub CLI hosts (contains tokens)
+.config/gh/hosts.yml
+
+# General logs
+*.log
