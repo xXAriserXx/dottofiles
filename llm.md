@@ -4,10 +4,10 @@ This guide is designed for an AI agent (like Gemini CLI, Claude, or GitHub Copil
 
 ## Repository Contents
 This folder contains configuration files (dotfiles) for:
-- **Zsh**: `.zshrc`, `.zprofile`, `.zshenv`
-- **Shell Theme**: `.p10k.zsh` (Powerlevel10k)
-- **Git**: `.gitconfig`
-- **Terminal**: `.wezterm.lua` (WezTerm)
+- **Zsh**: `zshrc`, `zprofile`, `zshenv`
+- **Shell Theme**: `p10k.zsh` (Powerlevel10k)
+- **Git**: `gitconfig`
+- **Terminal**: `wezterm.lua` (WezTerm)
 
 ---
 
@@ -23,13 +23,13 @@ Create symbolic links from the home directory to these files. Use the following 
 
 ```bash
 cd ~/dottofiles
-for item in .zshrc .zprofile .zshenv .p10k.zsh .gitconfig .wezterm.lua; do
+for item in zshrc zprofile zshenv p10k.zsh gitconfig wezterm.lua; do
   # Backup existing files if they are not symlinks
-  if [ -e ~/"$item" ] && [ ! -L ~/"$item" ]; then
-    mv ~/"$item" ~/"$item.bak"
+  if [ -e ~/."$item" ] && [ ! -L ~/."$item" ]; then
+    mv ~/."$item" ~/."$item.bak"
   fi
-  # Create the symlink
-  ln -sfn "$(pwd)/$item" ~/"$item"
+  # Create the symlink (repo files are non-hidden, home dir symlinks have the dot prefix)
+  ln -sfn "$(pwd)/$item" ~/."$item"
 done
 ```
 

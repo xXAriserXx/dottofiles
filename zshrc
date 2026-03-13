@@ -13,7 +13,8 @@ export AWS_PROFILE="jp"
 export EDITOR="nvim"
 
 
-source $(brew --prefix nvm)/nvm.sh
+# nvm is loaded below on line 231-232
+# source $(brew --prefix nvm)/nvm.sh
 
 #zsh
 alias rzsh="source ~/.zshrc"
