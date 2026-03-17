@@ -151,6 +151,7 @@ alias gmix="git reset --mixed HEAD~1"
 alias gck="git checkout"
 alias gmg="git merge"
 alias gcl="git clone"
+alias cloneblor='cd ~/Documents && if [ ! -d blor ]; then mkdir blor && cd blor && git clone git@github.com:ottimis/blor-fe.git && git clone git@github.com:ottimis/Blorcompany.com.git && git clone git@github.com:ottimis/B-Revolution.git && echo "Successfully cloned all repositories."; else echo "Folder blor already exists. Stopping."; fi'
 alias gst="git status"
 alias grm="git remote -v"
 alias gsh="git stash"
@@ -281,7 +282,7 @@ alias key="cd && cd Desktop/withoutMouse &&  .build/release/WhiteWindow"
 export PATH="$HOME/.local/bin:$PATH"
 
 # pnpm
-export PNPM_HOME="/Users/jrprecilla/Library/pnpm"
+export PNPM_HOME="$HOME/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
