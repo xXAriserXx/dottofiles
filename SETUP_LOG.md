@@ -54,6 +54,14 @@ Verified and used for all subsequent installations.
   ln -sfn "$(pwd)/p10k.zsh" ~/.p10k.zsh
   ```
 
+### Editor: Neovim
+- **Action**: Copied Neovim configuration and symlinked it.
+- **Commands**:
+  ```bash
+  mkdir -p ~/.config/nvim
+  ln -sfn "$(pwd)/nvim/init.lua" ~/.config/nvim/init.lua
+  ```
+
 ### Shell: Zsh
 - **Action**: Symlinked core Zsh configuration files.
 - **Commands**:
@@ -74,6 +82,7 @@ For every symlink created, if a physical file (not a symlink) already existed at
 - [x] AeroSpace Setup
 - [x] Powerlevel10k Setup
 - [x] Zsh Setup
+- [x] Neovim Setup
 - [ ] Core CLI Tools (nvm, neovim, tmux, etc.)
 - [ ] VS Code & Docker
 - [ ] Media Tools (yt-dlp, mpv, etc.)

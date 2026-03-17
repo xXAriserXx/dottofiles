@@ -10,6 +10,7 @@ This folder contains configuration files (dotfiles) for:
 - **Terminal**: `wezterm.lua` (WezTerm)
 - **Karabiner**: `karabiner/karabiner.json` (Key mappings)
 - **Aerospace**: `aerospace.toml` (Window manager)
+- **Neovim**: `nvim/init.lua` (Neovim configuration)
 
 ---
 
@@ -42,6 +43,13 @@ if [ -e ~/.config/karabiner/karabiner.json ] && [ ! -L ~/.config/karabiner/karab
   mv ~/.config/karabiner/karabiner.json ~/.config/karabiner/karabiner.json.bak
 fi
 ln -sfn "$(pwd)/karabiner/karabiner.json" ~/.config/karabiner/karabiner.json
+
+# Neovim (Special handling: symlink into ~/.config/nvim/)
+mkdir -p ~/.config/nvim
+if [ -e ~/.config/nvim/init.lua ] && [ ! -L ~/.config/nvim/init.lua ]; then
+  mv ~/.config/nvim/init.lua ~/.config/nvim/init.lua.bak
+fi
+ln -sfn "$(pwd)/nvim/init.lua" ~/.config/nvim/init.lua
 ```
 
 ### 3. Install Prerequisites
