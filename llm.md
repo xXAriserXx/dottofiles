@@ -9,6 +9,7 @@ This folder contains configuration files (dotfiles) for:
 - **Git**: `gitconfig`
 - **Terminal**: `wezterm.lua` (WezTerm)
 - **Karabiner**: `karabiner/karabiner.json` (Key mappings)
+- **Aerospace**: `aerospace.toml` (Window manager)
 
 ---
 
@@ -26,7 +27,7 @@ Create symbolic links from the home directory to these files. Use the following 
 cd ~/dottofiles
 
 # Standard dotfiles
-for item in zshrc zprofile zshenv p10k.zsh gitconfig wezterm.lua; do
+for item in zshrc zprofile zshenv p10k.zsh gitconfig wezterm.lua aerospace.toml; do
   # Backup existing files if they are not symlinks
   if [ -e ~/."$item" ] && [ ! -L ~/."$item" ]; then
     mv ~/."$item" ~/."$item.bak"
@@ -69,7 +70,7 @@ brew install nvm neovim tmux fzf ripgrep jq pnpm gh
 
 #### 3b. GUI applications
 ```bash
-brew install --cask wezterm visual-studio-code docker karabiner-elements
+brew install --cask wezterm visual-studio-code docker karabiner-elements nikitabobko/tap/aerospace
 ```
 
 | App | Why it's needed |
@@ -78,6 +79,7 @@ brew install --cask wezterm visual-studio-code docker karabiner-elements
 | **Visual Studio Code** | Editor — aliased as `nv` (`code -n`) |
 | **Docker** | Container runtime — `dcu`, `dcublor` aliases and `start_zeus()` |
 | **Karabiner-Elements** | Key remapping — configured by `karabiner/karabiner.json` |
+| **AeroSpace** | Window manager — configured by `aerospace.toml` |
 
 #### 3c. Zsh theme (Powerlevel10k)
 ```bash
