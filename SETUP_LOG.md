@@ -55,9 +55,10 @@ Verified and used for all subsequent installations.
   ```
 
 ### Editor: Neovim
-- **Action**: Copied Neovim configuration and symlinked it.
+- **Action**: Installed Neovim and symlinked configuration.
 - **Commands**:
   ```bash
+  brew install neovim
   mkdir -p ~/.config/nvim
   ln -sfn "$(pwd)/nvim/init.lua" ~/.config/nvim/init.lua
   ```
