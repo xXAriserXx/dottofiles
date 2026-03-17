@@ -45,6 +45,7 @@ alias hello='say -v Kyoko "何度でも何度でも叫ぶこの暗い夜の怪�
 alias de="cd ~/Documents/desktop"
 alias dc="cd ~/Documents"
 alias dw="cd ~/Downloads"
+alias dotto="cd ~/Documents/dottofiles"
 alias jt="cd ~/Desktop/just-try"
 alias wk="cd ~/Documents/work"
 alias tl="dc && cd .traveler_logs"
@@ -56,7 +57,7 @@ alias pwds="gop && n login-data.json"
 
 alias play="dc && cd work/playground"
 
-alias hostbill="wk && cd hostbill"
+alias hostbill="dc && cd hostbill"
 alias ohost="open https://unistack-dev.unidata.it";
 alias ohostad="open https://unistack-dev.unidata.it/admin/";
 
@@ -79,7 +80,7 @@ alias ikoze='pnpm start'
 
 alias blorapp="pj && cd blor_app && cd BlorApp"
 alias bblor="pj && cd Blor/Blorcompany.com"
-alias blor="pj && cd Blor/blor-fe"
+alias blor="cd ~/Documents/blor"
 alias Blor="pj && cd old-blor && cd blor-fe"
 alias blorev="pj && cd Blor/B-Revolution"
 
@@ -192,7 +193,7 @@ alias orev="open https://github.com/ottimis/B-Revolution"
 alias oportb="open https://docker.blorcompany.com/#!/2/docker/containers"
 alias oportu="open https://portainer.unidata.it/#!/home"
 alias oporto="open http://test-01.otm.ai:9000/#!/1/docker/containers"
-alias oclick="open https://app.clickup.com/2462893/v/l/7-2462893-1"
+alias oclick="open https://app.clickup.com/2462893/time"
 
 alias odeep="open https://chat.deepseek.com/"
 # Android
@@ -546,11 +547,14 @@ gcom() {
 }
 
 
-alias kaizen='cd "/Users/jrprecilla/Library/CloudStorage/GoogleDrive-jrjrjrpr365@gmail.com/My Drive/DriveSyncFiles/kaizen"'
+alias kaizen='cd "$HOME/Library/CloudStorage/GoogleDrive-jrjrjrpr365@gmail.com/My Drive/DriveSyncFiles/kaizen"'
 
-alias bdev="pj && cd Blor/dev"
-alias bprod="pj && cd Blor/prod"
-alias bexp="pj && cd Blor/experimental"
+alias bdev="cd ~/Documents/blor/dev"
+alias bprod="cd ~/Documents/blor/prod"
+alias bexp="cd ~/Documents/blor/experimental"
 
 # Added by Antigravity
 export PATH="/Users/jrprecilla/.antigravity/antigravity/bin:$PATH"
+
+# Gemini CLI: Daily Note Alias
+alias dn='/Users/james/Library/CloudStorage/GoogleDrive-jrjrjrpr365@gmail.com/My\ Drive/DriveSyncFiles/kaizen/Config/dn.sh'

@@ -8,6 +8,7 @@ This folder contains configuration files (dotfiles) for:
 - **Shell Theme**: `p10k.zsh` (Powerlevel10k)
 - **Git**: `gitconfig`
 - **Terminal**: `wezterm.lua` (WezTerm)
+- **Karabiner**: `karabiner/karabiner.json` (Key mappings)
 
 ---
 
@@ -23,6 +24,8 @@ Create symbolic links from the home directory to these files. Use the following 
 
 ```bash
 cd ~/dottofiles
+
+# Standard dotfiles
 for item in zshrc zprofile zshenv p10k.zsh gitconfig wezterm.lua; do
   # Backup existing files if they are not symlinks
   if [ -e ~/."$item" ] && [ ! -L ~/."$item" ]; then
@@ -31,6 +34,13 @@ for item in zshrc zprofile zshenv p10k.zsh gitconfig wezterm.lua; do
   # Create the symlink (repo files are non-hidden, home dir symlinks have the dot prefix)
   ln -sfn "$(pwd)/$item" ~/."$item"
 done
+
+# Karabiner-Elements (Special handling: symlink the file, not the folder)
+mkdir -p ~/.config/karabiner
+if [ -e ~/.config/karabiner/karabiner.json ] && [ ! -L ~/.config/karabiner/karabiner.json ]; then
+  mv ~/.config/karabiner/karabiner.json ~/.config/karabiner/karabiner.json.bak
+fi
+ln -sfn "$(pwd)/karabiner/karabiner.json" ~/.config/karabiner/karabiner.json
 ```
 
 ### 3. Install Prerequisites
@@ -59,7 +69,7 @@ brew install nvm neovim tmux fzf ripgrep jq pnpm gh
 
 #### 3b. GUI applications
 ```bash
-brew install --cask wezterm visual-studio-code docker
+brew install --cask wezterm visual-studio-code docker karabiner-elements
 ```
 
 | App | Why it's needed |
@@ -67,6 +77,7 @@ brew install --cask wezterm visual-studio-code docker
 | **WezTerm** | Primary terminal — configured by `wezterm.lua` |
 | **Visual Studio Code** | Editor — aliased as `nv` (`code -n`) |
 | **Docker** | Container runtime — `dcu`, `dcublor` aliases and `start_zeus()` |
+| **Karabiner-Elements** | Key remapping — configured by `karabiner/karabiner.json` |
 
 #### 3c. Zsh theme (Powerlevel10k)
 ```bash
