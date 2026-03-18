@@ -69,6 +69,7 @@ alias zsh='h && nvim .zshrc'
 alias gp="dc && cd tests && node logHello.js"
 alias time="date +'%T'"
 alias day='date "+%a %b %d"'
+alias ip='curl -s ifconfig.me && echo'
 
 
 alias op1='code -n /Users/jamesjames/Documents/work/projects/blor-fe' 
