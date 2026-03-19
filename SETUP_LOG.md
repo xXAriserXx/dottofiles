@@ -72,6 +72,14 @@ Verified and used for all subsequent installations.
   done
   ```
 
+### Container Runtime: Docker
+- **Action**: Installed Docker Desktop and verified daemon status.
+- **Commands**:
+  ```bash
+  brew install --cask docker
+  open -a Docker
+  ```
+
 ---
 
 ## 🛠 Backup Strategy
@@ -84,6 +92,7 @@ For every symlink created, if a physical file (not a symlink) already existed at
 - [x] Powerlevel10k Setup
 - [x] Zsh Setup
 - [x] Neovim Setup
+- [x] Docker Setup
 - [ ] Core CLI Tools (nvm, neovim, tmux, etc.)
-- [ ] VS Code & Docker
+- [ ] VS Code
 - [ ] Media Tools (yt-dlp, mpv, etc.)
