@@ -53,7 +53,7 @@ alias pj="wk && cd projects"
 
 alias gop="cd && cd Documents/work/pwd"
 alias p="gop && node script.js"
-alias pwds="gop && n login-data.json"
+alias pwds="n /Users/james/Documents/greyrat-vault/pwds"
 
 alias play="dc && cd work/playground"
 
@@ -560,3 +560,4 @@ export PATH="/Users/jrprecilla/.antigravity/antigravity/bin:$PATH"
 
 # Gemini CLI: Daily Note Alias
 alias dn='/Users/james/Library/CloudStorage/GoogleDrive-jrjrjrpr365@gmail.com/My\ Drive/DriveSyncFiles/kaizen/Config/dn.sh'
+alias greyrat="cd /Users/james/Documents/greyrat-vault"
