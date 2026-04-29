@@ -34,6 +34,13 @@ if vim.uv.fs_stat(lazypath) then
       end,
     },
     {
+      "hat0uma/csvview.nvim",
+      ft = "csv",
+      config = function()
+        require("csvview").setup()
+      end,
+    },
+    {
       "williamboman/mason.nvim",
       config = function()
         require("mason").setup()

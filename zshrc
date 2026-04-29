@@ -67,6 +67,7 @@ alias ohostad="open https://unistack-dev.unidata.it/admin/";
 
 
 alias cnvim="h && nvim .config/nvim/init.lua"
+alias ncom="nvim /Users/james/Documents/dottofiles/nvim/KEYMAPS.md"
 alias n='nvim'
 alias zsh='h && nvim .zshrc'
 
@@ -574,6 +575,5 @@ alias kbgn="kubectl get namespaces"
 alias kbgp="kubectl get pods"
 alias kbblor="kubectl get pods -n blor"
 alias kbbfe="kubectl exec -it blor-fe-5d58567b46-knbrr -n blor --bin/bash"
-
 
 

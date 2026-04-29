@@ -58,4 +58,6 @@ Your movement keys are remapped from the standard Vim defaults:
 
 - Git Telescope commands work from the repository of the current file, not from the parent `prod` directory
 - Inline Git blame is disabled to avoid layout shift; use `<leader>hb` on demand
+- CSV files use `csvview.nvim` for a structured view inside Neovim
 - Your config is stored in `~/Documents/dottofiles/nvim/init.lua`
+- Shell alias `ncom` opens this file directly
