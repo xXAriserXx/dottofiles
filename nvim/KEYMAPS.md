@@ -5,6 +5,7 @@ Leader key: `Space`
 ## Search
 
 - `<leader>ff` : find files
+- `<C-r>` : quick file switch with Telescope file search
 - `<leader>fg` : search text across the project with Telescope live grep
 - `<leader>fb` : list open buffers
 - `<leader>fh` : search help tags
@@ -48,11 +49,13 @@ Your movement keys are remapped from the standard Vim defaults:
 ## Editing
 
 - Auto-pairs are enabled in insert mode for brackets and quotes
+- Catppuccin Frappe is the active colorscheme
 - Line numbers are enabled
-- Relative line numbers are enabled
+- Relative line numbers are disabled
 - Current line highlight is enabled
 
 ## Notes
 
 - Git Telescope commands work from the repository of the current file, not from the parent `prod` directory
+- Inline Git blame is disabled to avoid layout shift; use `<leader>hb` on demand
 - Your config is stored in `~/Documents/dottofiles/nvim/init.lua`

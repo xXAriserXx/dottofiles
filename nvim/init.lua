@@ -1,7 +1,8 @@
 vim.g.mapleader = " "
 
 vim.opt.number = true
-vim.opt.relativenumber = true
+vim.opt.numberwidth = 3
+vim.opt.signcolumn = "yes:1"
 vim.opt.cursorline = true
 vim.opt.cmdheight = 0
 
@@ -19,6 +20,19 @@ if vim.uv.fs_stat(lazypath) then
   vim.opt.rtp:prepend(lazypath)
 
   require("lazy").setup({
+    {
+      "catppuccin/nvim",
+      name = "catppuccin",
+      priority = 1000,
+      config = function()
+        require("catppuccin").setup({
+          flavour = "frappe",
+          transparent_background = true,
+        })
+
+        vim.cmd.colorscheme("catppuccin")
+      end,
+    },
     {
       "williamboman/mason.nvim",
       config = function()
@@ -117,10 +131,7 @@ if vim.uv.fs_stat(lazypath) then
       "lewis6991/gitsigns.nvim",
       config = function()
         require("gitsigns").setup({
-          current_line_blame = true,
-          current_line_blame_opts = {
-            delay = 300,
-          },
+          current_line_blame = false,
           on_attach = function(bufnr)
             local gs = package.loaded.gitsigns
             local opts = { buffer = bufnr }
@@ -210,6 +221,7 @@ if vim.uv.fs_stat(lazypath) then
         pcall(telescope.load_extension, "fzf")
 
         vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
+        vim.keymap.set("n", "<C-r>", builtin.find_files, { desc = "Find files" })
         vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Live grep" })
         vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Find buffers" })
         vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Help tags" })
