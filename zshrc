@@ -1,3 +1,5 @@
+export PATH="/Users/james/.local/bin:$PATH"
+
 HISTSIZE=100000
 SAVEHIST=100000
 
@@ -18,6 +20,8 @@ export EDITOR="nvim"
 
 #zsh
 alias rzsh="source ~/.zshrc"
+
+alias temporary="kubectl cp /Users/james/Documents/blor/prod/Blorcompany.com/src/app/vendor/ottimis/phplibs/src/dataBase.php blor/blor-be-6fcd79c89c-xvrrp:/var/www/html/app/vendor/ottimis/phplibs/src/dataBase.php"
 
 #tmux
 alias tms="tmux new-session -s"
@@ -99,7 +103,7 @@ alias goo="Blor && npm run start"
 #alias go="npm run start"
 
 alias doc='sigma && docker run -p 3000:3000 blor-fe'
-alias dcu="docker compose up"
+#alias dcu="docker compose up"
 alias dcublor="docker compose up blor-fe mysql backend redis"
 alias dcublorev="docker compose up b-revolution mysql backend redis"
 
@@ -561,3 +565,15 @@ export PATH="/Users/jrprecilla/.antigravity/antigravity/bin:$PATH"
 # Gemini CLI: Daily Note Alias
 alias dn='/Users/james/Library/CloudStorage/GoogleDrive-jrjrjrpr365@gmail.com/My\ Drive/DriveSyncFiles/kaizen/Config/dn.sh'
 alias greyrat="cd /Users/james/Documents/greyrat-vault"
+
+export AWS_PROFILE=jp
+alias dup='open -a Docker; (while ! docker info >/dev/null 2>&1; do sleep 1; done; docker-compose up) & source ~/.zshrc'
+alias dcu="docker compose up"
+
+alias kbgn="kubectl get namespaces"
+alias kbgp="kubectl get pods"
+alias kbblor="kubectl get pods -n blor"
+alias kbbfe="kubectl exec -it blor-fe-5d58567b46-knbrr -n blor --bin/bash"
+
+
+
