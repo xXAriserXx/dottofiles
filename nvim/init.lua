@@ -5,6 +5,8 @@ vim.opt.numberwidth = 3
 vim.opt.signcolumn = "yes:1"
 vim.opt.cursorline = true
 vim.opt.cmdheight = 0
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
@@ -68,8 +70,8 @@ if vim.uv.fs_stat(lazypath) then
 
         local on_attach = function(_, bufnr)
           local opts = { buffer = bufnr }
-          vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-          vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+          vim.keymap.set("n", "gd", require("telescope.builtin").lsp_definitions, opts)
+          vim.keymap.set("n", "gr", require("telescope.builtin").lsp_references, opts)
           vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
           vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
           vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)

@@ -155,6 +155,10 @@ alias ghard="git reset --hard HEAD~1"
 alias gsoft="git reset --soft HEAD~1"
 alias gmix="git reset --mixed HEAD~1"
 alias gck="git checkout"
+alias gm="git checkout main"
+alias gd="git checkout dev"
+alias gs="git checkout staging"
+alias gprod="git checkout prod"
 alias gmg="git merge"
 alias gcl="git clone"
 alias cloneblor='cd ~/Documents && if [ ! -d blor ]; then mkdir -p blor/dev blor/prod && for dir in blor/dev blor/prod; do cd ~/Documents/$dir && git clone git@github.com:ottimis/blor-fe.git && git clone git@github.com:ottimis/Blorcompany.com.git && git clone git@github.com:ottimis/B-Revolution.git; done && echo "Successfully cloned all repositories."; else echo "Folder blor already exists. Stopping."; fi'
@@ -558,7 +562,17 @@ alias kaizen='cd "$HOME/Library/CloudStorage/GoogleDrive-jrjrjrpr365@gmail.com/M
 
 alias bdev="cd ~/Documents/blor/dev"
 alias bprod="cd ~/Documents/blor/prod"
+alias br="bprod && cd B-Revolution"
+alias bb="bprod && cd Blorcompany.com"
+alias bf="bprod && cd blor-fe"
 alias bexp="cd ~/Documents/blor/experimental"
+alias xray="cd ~/Documents/blor/prod/Blorcompany.com && php tools/codebase-analyzer.php && python3 tools/_build_xray.py && open tools/codebase-xray.html"
+alias oxray="open ~/Documents/blor/prod/Blorcompany.com/tools/codebase-xray.html"
+
+alias st="pnpm run start"
+
+
+alias cl="claude"
 
 # Added by Antigravity
 export PATH="/Users/jrprecilla/.antigravity/antigravity/bin:$PATH"
