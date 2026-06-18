@@ -558,6 +558,7 @@ gcom() {
 }
 
 
+alias next="cd ~/nextcloud-files/admin/files"
 alias kaizen='cd "$HOME/Library/CloudStorage/GoogleDrive-jrjrjrpr365@gmail.com/My Drive/DriveSyncFiles/kaizen"'
 
 alias bdev="cd ~/Documents/blor/dev"
