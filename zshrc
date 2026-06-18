@@ -30,7 +30,7 @@ alias ttl="tmux attach -t logs"
 alias tbl="tmux attach -t blor"
 
 alias ..="cd .."
-alias navicat='cd ~/Downloads && ./nc-reset.sh'
+alias navicat='~/Documents/dottofiles/navicat-premium-reset-trial/reset-trial.sh'
 alias h='cd ~' #goes to the root folder
 alias aeroConf= "h && cd .. && nvim .aerospace.toml"
 alias c='clear' #clears the terminal
@@ -561,10 +561,10 @@ gcom() {
 alias kaizen='cd "$HOME/Library/CloudStorage/GoogleDrive-jrjrjrpr365@gmail.com/My Drive/DriveSyncFiles/kaizen"'
 
 alias bdev="cd ~/Documents/blor/dev"
-alias bprod="cd ~/Documents/blor/prod"
-alias br="bprod && cd B-Revolution"
-alias bb="bprod && cd Blorcompany.com"
-alias bf="bprod && cd blor-fe"
+alias bprod="cd ~/Documents/blor/prod && clear"
+alias br="bprod && cd B-Revolution && clear"
+alias bb="bprod && cd Blorcompany.com && clear"
+alias bf="bprod && cd blor-fe && clear"
 alias bexp="cd ~/Documents/blor/experimental"
 alias xray="cd ~/Documents/blor/prod/Blorcompany.com && php tools/codebase-analyzer.php && python3 tools/_build_xray.py && open tools/codebase-xray.html"
 alias oxray="open ~/Documents/blor/prod/Blorcompany.com/tools/codebase-xray.html"
