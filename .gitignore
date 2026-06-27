@@ -20,3 +20,6 @@
 
 # General logs
 *.log
+
+# Local secrets (API keys etc.)
+.zshrc.secrets

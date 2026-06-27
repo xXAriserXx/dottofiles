@@ -13,6 +13,7 @@ typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 export NVM_DIR="$HOME/.nvm"
 export AWS_PROFILE="jp"
 export EDITOR="nvim"
+export DYLD_LIBRARY_PATH="/opt/homebrew/opt/expat/lib"
 
 
 # nvm is loaded below on line 231-232
@@ -305,7 +306,7 @@ HISTSIZE=1000000
 SAVEHIST=1000000
 
 # DeepSeek auth for gcom()
-export DEEPSEEK_API_KEY='sk-bee16364619241abba98e0e8d8fe01f0'
+[[ -f ~/.zshrc.secrets ]] && source ~/.zshrc.secrets
 # export DEEPSEEK_MODEL='deepseek-chat'
 
 gcom() {
@@ -574,6 +575,7 @@ alias st="pnpm run start"
 
 
 alias cl="claude"
+alias cx="codex"
 
 # Added by Antigravity
 export PATH="/Users/jrprecilla/.antigravity/antigravity/bin:$PATH"
@@ -583,6 +585,7 @@ alias dn='/Users/james/Library/CloudStorage/GoogleDrive-jrjrjrpr365@gmail.com/My
 alias greyrat="cd /Users/james/Documents/greyrat-vault"
 
 export AWS_PROFILE=jp
+alias awslogin="aws sso login --profile jp"
 alias dup='open -a Docker; (while ! docker info >/dev/null 2>&1; do sleep 1; done; docker-compose up) & source ~/.zshrc'
 alias dcu="docker compose up"
 
@@ -591,4 +594,11 @@ alias kbgp="kubectl get pods"
 alias kbblor="kubectl get pods -n blor"
 alias kbbfe="kubectl exec -it blor-fe-5d58567b46-knbrr -n blor --bin/bash"
 
+alias rp="cd ~/Documents/reseller-portal"
+alias rpa="cd ~/Documents/reseller-portal/backend"
+alias rpf="cd ~/Documents/reseller-portal/frontend"
 
+
+
+# Added by Antigravity
+export PATH="/Users/james/.antigravity/antigravity/bin:$PATH"

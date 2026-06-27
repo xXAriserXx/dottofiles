@@ -8,7 +8,7 @@ This is a dotfiles repo. All config files are symlinked from here to their syste
 - `aerospace.toml` — Tiling window manager (AeroSpace)
 - `p10k.zsh` — Powerlevel10k prompt theme
 - `nvim/` — Neovim config
-- `karabiner/` — Keyboard remapping rules
+- `karabiner/` — Keyboard remapping rules (machine-specific, see below)
 - `zprofile`, `zshenv` — Shell env setup (zshenv is empty)
 - `llm.md` — LLM-related notes
 - `SETUP_LOG.md` — Machine bootstrap steps
@@ -19,3 +19,12 @@ This is a dotfiles repo. All config files are symlinked from here to their syste
 - Never commit secrets (tokens, credentials, API keys). Check `.gitignore` before adding new config dirs.
 - `zshrc` is large (~600 lines). Keep aliases grouped by project/tool. Git aliases are near line 155, blor aliases near line 560.
 - Test alias changes with `source ~/.zshrc` before committing.
+
+## Karabiner (machine-specific)
+
+There are two different Karabiner configs for two different machines. Symlink the correct one to `~/.config/karabiner/karabiner.json`:
+
+- `karabiner/karabiner-apple.json` — for the machine with an Apple Magic Keyboard (vendor 1452, product 641). Has a device-specific rule swapping `left_command` → `left_option`.
+- `karabiner/karabiner-other.json` — for the other machine, no device-specific overrides.
+
+To set up on a new machine: `ln -sf ~/Documents/dottofiles/karabiner/karabiner-<machine>.json ~/.config/karabiner/karabiner.json`
