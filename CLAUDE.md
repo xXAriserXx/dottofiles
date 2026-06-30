@@ -19,6 +19,7 @@ This is a dotfiles repo. All config files are symlinked from here to their syste
 - Never commit secrets (tokens, credentials, API keys). Check `.gitignore` before adding new config dirs.
 - `zshrc` is large (~600 lines). Keep aliases grouped by project/tool. Git aliases are near line 155, blor aliases near line 560.
 - Test alias changes with `source ~/.zshrc` before committing.
+- After making changes, always: `git pull --rebase`, commit, and push. If there are merge conflicts, stop and ask before resolving.
 
 ## Karabiner (machine-specific)
 
