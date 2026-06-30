@@ -288,6 +288,8 @@ export PATH="/Users/jrprecilla/.antigravity/antigravity/bin:$PATH"
 alias rblor="wk && cd reminders && cat blor.txt"
 alias fool='cd && cd Desktop/fool/native/ && .build/release/FoolApp'
 alias key="cd ~/Documents/withoutMouse && .build/release/WhiteWindow"
+alias ww='/Users/james/Documents/withoutMouse/.build/release/WhiteWindow & disown'
+alias killww='pkill WhiteWindow'
 
 
 export PATH="$HOME/.local/bin:$PATH"
