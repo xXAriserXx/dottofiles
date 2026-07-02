@@ -604,3 +604,6 @@ alias rpf="cd ~/Documents/reseller-portal/frontend"
 
 # Added by Antigravity
 export PATH="/Users/james/.antigravity/antigravity/bin:$PATH"
+
+# Copy file contents to clipboard: cb <file>
+alias cb='pbcopy <'
