@@ -62,7 +62,7 @@ alias pwds="n /Users/james/Documents/greyrat-vault/pwds"
 
 alias play="dc && cd work/playground"
 
-alias hostbill="dc && cd hostbill"
+alias hb="dc && cd hostbill_new"
 alias ohost="open https://unistack-dev.unidata.it";
 alias ohostad="open https://unistack-dev.unidata.it/admin/";
 
@@ -105,9 +105,12 @@ alias goo="Blor && npm run start"
 #alias go="npm run start"
 
 alias doc='sigma && docker run -p 3000:3000 blor-fe'
-#alias dcu="docker compose up"
-alias dcublor="docker compose up blor-fe mysql backend redis"
-alias dcublorev="docker compose up b-revolution mysql backend redis"
+# Blor stack via the root prod/ docker-compose.yaml. Each frontend's
+# depends_on pulls the whole backend (web + mariadb + redis), so naming
+# just the frontend is enough. bprod cds into prod/ where the compose lives.
+alias d="bprod && docker compose up"                     # everything
+alias dfe="bprod && docker compose up blor-fe"           # storefront + backend
+alias drev="bprod && docker compose up b-revolution"     # admin + backend
 
 alias testing="de && cd test"
 
@@ -607,3 +610,9 @@ export PATH="/Users/james/.antigravity/antigravity/bin:$PATH"
 
 # Copy file contents to clipboard: cb <file>
 alias cb='pbcopy <'
+
+# Boomi API daily quiz gate (first interactive terminal of the day)
+alias boomi-quiz="python3 /Users/james/.boomi-quiz/app/boomi_quiz.py"
+if [[ -o interactive ]] && [ -t 0 ]; then
+  python3 /Users/james/.boomi-quiz/app/boomi_quiz.py --gate
+fi
