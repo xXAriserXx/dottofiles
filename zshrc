@@ -111,6 +111,7 @@ alias doc='sigma && docker run -p 3000:3000 blor-fe'
 alias d="bprod && docker compose up"                     # everything
 alias dfe="bprod && docker compose up blor-fe"           # storefront + backend
 alias drev="bprod && docker compose up b-revolution"     # admin + backend
+alias ddown="bprod && docker compose down"               # stop ALL (whatever was started)
 
 alias testing="de && cd test"
 
