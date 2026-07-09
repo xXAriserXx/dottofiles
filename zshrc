@@ -56,6 +56,7 @@ alias wk="cd ~/Documents/work"
 alias tl="dc && cd .traveler_logs"
 alias iru='cd ~/drills/understanding && claude "drill me"' #retrieval-practice drill (desk → drill → work)
 alias pj="wk && cd projects"
+alias vl="cd ~/projects/Volleyball"
 
 alias gop="cd && cd Documents/work/pwd"
 alias p="gop && node script.js"
