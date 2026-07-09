@@ -54,6 +54,7 @@ alias dotto="cd ~/Documents/dottofiles"
 alias jt="cd ~/Desktop/just-try"
 alias wk="cd ~/Documents/work"
 alias tl="dc && cd .traveler_logs"
+alias iru='cd ~/drills/understanding && claude "drill me"' #retrieval-practice drill (desk → drill → work)
 alias pj="wk && cd projects"
 
 alias gop="cd && cd Documents/work/pwd"
