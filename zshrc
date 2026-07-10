@@ -102,9 +102,12 @@ alias mybe="pj && cd unidata/myunidata-be"
 alias mpb="pj && cd unidata/my-uni-pass/myuni-pass-be"
 alias mpf="pj && cd unidata/my-uni-pass/myuni-pass-fe"
 
+alias lea="cd ~/projects/leamor"
+
 alias nyan="blor && ike"
 alias goo="Blor && npm run start"
 #alias go="npm run start"
+alias via='nohup npm run start > app.log 2>&1 & disown'
 
 alias doc='sigma && docker run -p 3000:3000 blor-fe'
 # Blor stack via the root prod/ docker-compose.yaml. Each frontend's
