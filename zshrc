@@ -1,7 +1,7 @@
 export PATH="/Users/james/.local/bin:$PATH"
 
-HISTSIZE=100000
-SAVEHIST=100000
+HISTSIZE=1000000
+SAVEHIST=1000000
 
 
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
@@ -10,14 +10,10 @@ fi
 
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
-export NVM_DIR="$HOME/.nvm"
 export AWS_PROFILE="jp"
 export EDITOR="nvim"
 export DYLD_LIBRARY_PATH="/opt/homebrew/opt/expat/lib"
 
-
-# nvm is loaded below on line 231-232
-# source $(brew --prefix nvm)/nvm.sh
 
 #zsh
 alias rzsh="source ~/.zshrc"
@@ -33,7 +29,7 @@ alias tbl="tmux attach -t blor"
 alias ..="cd .."
 alias navicat='~/Documents/dottofiles/navicat-premium-reset-trial/reset-trial.sh'
 alias h='cd ~' #goes to the root folder
-alias aeroConf= "h && cd .. && nvim .aerospace.toml"
+alias aeroConf="nvim ~/Documents/dottofiles/aerospace.toml"
 alias c='clear' #clears the terminal
 alias e='cd'
 alias nv='code -n' #creates a new coding window
@@ -41,8 +37,7 @@ alias md='mkdir' #makes a folder or directory
 alias rd='rmdir' #removes folder/directory
 alias sl='pmset sleepnow' #sets the mac to sleep
 alias fs='du -sh' #shows the folder size
-alias cs='du -sh*' #shows the size of each file inside a folder
-alias e='cd' #goes back to the previous folder/directory you were in
+alias cs='du -sh *' #shows the size of each file inside a folder
 alias t='touch'
 alias shine='sudo shutdown -h now'
 alias secret='say nandodemo'
@@ -105,7 +100,6 @@ alias lea="cd ~/projects/leamor"
 
 alias nyan="blor && ike"
 alias goo="Blor && npm run start"
-#alias go="npm run start"
 alias via='nohup npm run start > app.log 2>&1 & disown'
 
 alias doc='sigma && docker run -p 3000:3000 blor-fe'
@@ -122,7 +116,7 @@ alias testing="de && cd test"
 alias pretty="npx prettier --write ."
 
 alias op='op1 && op2'
-alias vlc='op -a VLC'
+alias vlc='open -a VLC'
 alias yt='yt-dlp'
 alias ytm='yt-dlp -x'
 alias ytmm='yt-dlp -f "bestaudio"'
@@ -161,7 +155,6 @@ alias glg="git log"
 alias gbr="git branch"
 alias gsoft="git reset --soft HEAD~1"
 alias ghard="git reset --hard HEAD~1"
-alias gsoft="git reset --soft HEAD~1"
 alias gmix="git reset --mixed HEAD~1"
 alias gck="git checkout"
 alias gm="git checkout main"
@@ -180,7 +173,6 @@ alias pass='dc && cd work && n pwd.json'
 
 
 
-# alias zeus_fe='cd /Users/dumitruzanogea/Documents/Progetti/Zeus/zeus2.0'
 alias zeus_be='cd /Users/dumitruzanogea/Documents/Progetti/New-Zeus/zeus-be'
 alias zeus_fe='cd /Users/dumitruzanogea/Documents/Progetti/New-Zeus/zeus-fe'
 alias adb_dir='root && cd Library/Android/sdk/platform-tools'
@@ -208,7 +200,6 @@ alias omyfe="open https://git.uniot.eu/ottimis/myunidata-fe"
 alias omybe="open https://git.uniot.eu/ottimis/myunidata-be"
 alias obblor="open https://github.com/ottimis/Blorcompany.com"
 alias oblor="open https://github.com/ottimis/blor-fe"
-alias oblorb="open https://github.com/ottimis/Blorcompany.com"
 alias orev="open https://github.com/ottimis/B-Revolution"
 alias oportb="open https://docker.blorcompany.com/#!/2/docker/containers"
 alias oportu="open https://portainer.unidata.it/#!/home"
@@ -220,11 +211,6 @@ alias odeep="open https://chat.deepseek.com/"
 connect_android() {
   adb_dir && adb connect 192.168.0.50:${1} 
   }
-
-# alias android_log_version='echo $(grep versionCode build.gradle) && echo $(grep versionName build.gradle)'
-  # android_set_version(){
-  #   android_log_version && sed -i '' "s/versionName \"[0-9]*.[0-9]*.[0-9]*\"/versionName \"$2\"/" build.gradle && android_log_version
-  # }
 
   function start_zeus() {
   # 1. Start Docker daemon se non è attivo (solo su sistemi dove ha senso, come macOS o WSL)
@@ -290,17 +276,11 @@ alias hostbillconnect="ssh hostbill@83.217.190.28"
 alias edit='open "https://unistack-dev.unidata.it/admin/?cmd=theme_config&action=config&id=1"'
 
 
-# Added by Antigravity
-export PATH="/Users/jrprecilla/.antigravity/antigravity/bin:$PATH"
-
 alias rblor="wk && cd reminders && cat blor.txt"
 alias fool='cd && cd Desktop/fool/native/ && .build/release/FoolApp'
 alias key="cd ~/Documents/withoutMouse && .build/release/WhiteWindow"
 alias ww='/Users/james/Documents/withoutMouse/.build/release/WhiteWindow & disown'
 alias killww='pkill WhiteWindow'
-
-
-export PATH="$HOME/.local/bin:$PATH"
 
 # pnpm
 export PNPM_HOME="$HOME/Library/pnpm"
@@ -312,12 +292,9 @@ esac
 
 # Alias for ima tool
 alias ima="/Users/jrprecilla/Documents/work/projects/control/ima"
-HISTSIZE=1000000
-SAVEHIST=1000000
 
 # DeepSeek auth for gcom()
 [[ -f ~/.zshrc.secrets ]] && source ~/.zshrc.secrets
-# export DEEPSEEK_MODEL='deepseek-chat'
 
 gcom() {
   if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
@@ -587,14 +564,10 @@ alias st="pnpm run start"
 alias cl="claude"
 alias cx="codex"
 
-# Added by Antigravity
-export PATH="/Users/jrprecilla/.antigravity/antigravity/bin:$PATH"
-
 # Gemini CLI: Daily Note Alias
 alias dn='/Users/james/Library/CloudStorage/GoogleDrive-jrjrjrpr365@gmail.com/My\ Drive/DriveSyncFiles/kaizen/Config/dn.sh'
 alias greyrat="cd /Users/james/Documents/greyrat-vault"
 
-export AWS_PROFILE=jp
 alias awslogin="aws sso login --profile jp"
 alias dup='open -a Docker; (while ! docker info >/dev/null 2>&1; do sleep 1; done; docker-compose up) & source ~/.zshrc'
 alias dcu="docker compose up"
@@ -602,7 +575,7 @@ alias dcu="docker compose up"
 alias kbgn="kubectl get namespaces"
 alias kbgp="kubectl get pods"
 alias kbblor="kubectl get pods -n blor"
-alias kbbfe="kubectl exec -it blor-fe-5d58567b46-knbrr -n blor --bin/bash"
+alias kbbfe="kubectl exec -it blor-fe-5d58567b46-knbrr -n blor -- /bin/bash"
 
 alias rp="cd ~/Documents/reseller-portal"
 alias rpa="cd ~/Documents/reseller-portal/backend"
