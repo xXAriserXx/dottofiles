@@ -85,7 +85,6 @@ alias op2='code -n /Users/jamesjames/Documents/work/projects/old-blor/blor-fe'
 
 alias ike='pnpm run dev'
 alias bd='pnpm build'
-alias ikoze='pnpm start'
 
 alias blorapp="pj && cd blor_app && cd BlorApp"
 alias bblor="pj && cd Blor/Blorcompany.com"
