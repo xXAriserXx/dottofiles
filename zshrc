@@ -138,6 +138,7 @@ alias gop="cd && cd Documents/work/pwd"
 alias gp="dc && cd tests && node logHello.js"
 alias iru='cd ~/drills/understanding && claude "drill me"'   # retrieval-practice drill
 alias irw='cd ~/drills/understanding && claude "concept write-up"'   # write derived concepts into concepts.md from memory, coach grades
+alias norn='cd ~ && claude "/norn"'   # list saved pending chats
 
 # ============================================================
 # Docker
@@ -331,6 +332,21 @@ gps() {
 
     echo "✓ Checklist completed. Pushing to remote..."
     git push
+}
+
+# New drill concept scaffold: next ## number + date tag before the spine section — conc [title]
+conc() {
+  local f="$HOME/drills/understanding/concepts.md"
+  local n=$(( $(grep -E '^## [0-9]+' "$f" | sed 's/^## \([0-9]*\).*/\1/' | sort -n | tail -1) + 1 ))
+  local spine=$(grep -n '^## The spine' "$f" | head -1 | cut -d: -f1)
+  [ -z "$spine" ] && { echo "spine section not found in $f"; return 1; }
+  local tmp=$(mktemp)
+  {
+    head -n $((spine - 1)) "$f"
+    printf '## %s. %s\n*(written by me from memory, %s)*\n\n\n\n' "$n" "${1:-Title}" "$(date +%Y-%m-%d)"
+    tail -n +"$spine" "$f"
+  } > "$tmp" && mv "$tmp" "$f"
+  ${EDITOR:-nvim} +$((spine + 2)) "$f"
 }
 
 
