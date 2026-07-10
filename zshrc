@@ -137,6 +137,7 @@ alias p="gop && node script.js"
 alias gop="cd && cd Documents/work/pwd"
 alias gp="dc && cd tests && node logHello.js"
 alias iru='cd ~/drills/understanding && claude "drill me"'   # retrieval-practice drill
+alias irw='cd ~/drills/understanding && claude "concept write-up"'   # write derived concepts into concepts.md from memory, coach grades
 
 # ============================================================
 # Docker
