@@ -334,6 +334,40 @@ gps() {
     git push
 }
 
+# Blor stack switcher: run the admin stack locally or on the Mac mini
+# (docker context "mini" + Mutagen sync). Remote mode tunnels 4200/4001/3309
+# so localhost URLs keep working either way. — bstack local|remote|status
+bstack() {
+  local mini="james@100.115.194.118"
+  local tunnel="ssh -f -N -L 4200:localhost:4200 -L 4001:localhost:4001 -L 3309:localhost:3309"
+  case "$1" in
+    local)
+      pkill -f "$tunnel" 2>/dev/null && echo "🔌 Tunnel closed"
+      docker --context mini compose -f ~/Documents/blor/prod/docker-compose.yaml down 2>/dev/null && echo "🛑 Remote stack stopped"
+      if ! docker --context desktop-linux info >/dev/null 2>&1; then
+        echo "⏳ Starting Docker Desktop..."
+        open --background -a Docker
+        while ! docker --context desktop-linux info >/dev/null 2>&1; do sleep 1; done
+      fi
+      docker --context desktop-linux compose -f ~/Documents/blor/prod/docker-compose.yaml up -d b-revolution &&
+        echo "✅ Local stack up → localhost:4200"
+      ;;
+    remote)
+      docker --context desktop-linux compose -f ~/Documents/blor/prod/docker-compose.yaml down 2>/dev/null && echo "🛑 Local stack stopped"
+      docker --context mini compose -f ~/Documents/blor/prod/docker-compose.yaml up -d b-revolution || return 1
+      pkill -f "$tunnel" 2>/dev/null
+      ${=tunnel} "$mini" && echo "✅ Remote stack up on mini + tunnel → localhost:4200"
+      ;;
+    status)
+      pgrep -f "$tunnel" >/dev/null && echo "🔗 Tunnel: up" || echo "🔗 Tunnel: down"
+      echo "💻 Local:  $(docker --context desktop-linux ps --format '{{.Names}}' 2>/dev/null | grep -c 'blorcompanycom\|brevolution\|blor-fe' | tr -d ' ') containers"
+      echo "🖥️  Mini:   $(docker --context mini ps --format '{{.Names}}' 2>/dev/null | grep -c 'blorcompanycom\|brevolution\|blor-fe' | tr -d ' ') containers"
+      ;;
+    *)
+      echo "usage: bstack local|remote|status" ;;
+  esac
+}
+
 # New drill concept scaffold: next ## number + date tag before the spine section — conc [title]
 conc() {
   local f="$HOME/drills/understanding/concepts.md"
