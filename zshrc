@@ -335,31 +335,39 @@ gps() {
 }
 
 # Blor stack switcher: run the admin stack locally or on the Mac mini
-# (docker context "mini" + Mutagen sync). Remote mode tunnels 4200/4001/3309
-# so localhost URLs keep working either way. — bstack local|remote|status
+# (docker context "mini" + Mutagen sync). ONE live DB — the mini's — in both
+# modes: remote uses it directly, local reaches it via the 3309 tunnel
+# (docker-compose.mini-db.yaml override). localhost URLs work either way.
+# Emergency fallback with the stale local DB: plain drev/d. — bstack local|remote|status
 bstack() {
   local mini="james@100.115.194.118"
-  local tunnel="ssh -f -N -L 4200:localhost:4200 -L 4001:localhost:4001 -L 3309:localhost:3309"
+  local compose=~/Documents/blor/prod/docker-compose.yaml
+  local full_tunnel="ssh -f -N -L 4200:localhost:4200 -L 4001:localhost:4001 -L 3309:localhost:3309"
+  local db_tunnel="ssh -f -N -L 3309:localhost:3309"
   case "$1" in
     local)
-      pkill -f "$tunnel" 2>/dev/null && echo "🔌 Tunnel closed"
-      docker --context mini compose -f ~/Documents/blor/prod/docker-compose.yaml down 2>/dev/null && echo "🛑 Remote stack stopped"
+      pkill -f "ssh -f -N -L" 2>/dev/null
+      # keep the mini's mariadb up (single DB); stop only its app containers
+      docker --context mini compose -f $compose stop b-revolution blor-fe web redis 2>/dev/null && echo "🛑 Mini app containers stopped (DB stays up)"
+      docker --context mini compose -f $compose up -d mariadb 2>/dev/null
+      ${=db_tunnel} "$mini" && echo "🔗 DB tunnel → mini:3309"
       if ! docker --context desktop-linux info >/dev/null 2>&1; then
         echo "⏳ Starting Docker Desktop..."
         open --background -a Docker
         while ! docker --context desktop-linux info >/dev/null 2>&1; do sleep 1; done
       fi
-      docker --context desktop-linux compose -f ~/Documents/blor/prod/docker-compose.yaml up -d b-revolution &&
-        echo "✅ Local stack up → localhost:4200"
+      docker --context desktop-linux compose -f $compose -f ~/Documents/blor/prod/docker-compose.mini-db.yaml up -d b-revolution &&
+        echo "✅ Local stack up (DB on mini) → localhost:4200"
       ;;
     remote)
-      docker --context desktop-linux compose -f ~/Documents/blor/prod/docker-compose.yaml down 2>/dev/null && echo "🛑 Local stack stopped"
-      docker --context mini compose -f ~/Documents/blor/prod/docker-compose.yaml up -d b-revolution || return 1
-      pkill -f "$tunnel" 2>/dev/null
-      ${=tunnel} "$mini" && echo "✅ Remote stack up on mini + tunnel → localhost:4200"
+      docker --context desktop-linux compose -f $compose down 2>/dev/null && echo "🛑 Local stack stopped"
+      docker --context mini compose -f $compose up -d b-revolution || return 1
+      pkill -f "ssh -f -N -L" 2>/dev/null
+      ${=full_tunnel} "$mini" && echo "✅ Remote stack up on mini + tunnel → localhost:4200"
       ;;
     status)
-      pgrep -f "$tunnel" >/dev/null && echo "🔗 Tunnel: up" || echo "🔗 Tunnel: down"
+      pgrep -f "ssh -f -N -L 4200" >/dev/null && echo "🔗 Tunnel: full (remote mode)" ||
+        { pgrep -f "ssh -f -N -L 3309" >/dev/null && echo "🔗 Tunnel: DB-only (local mode)" || echo "🔗 Tunnel: down"; }
       echo "💻 Local:  $(docker --context desktop-linux ps --format '{{.Names}}' 2>/dev/null | grep -c 'blorcompanycom\|brevolution\|blor-fe' | tr -d ' ') containers"
       echo "🖥️  Mini:   $(docker --context mini ps --format '{{.Names}}' 2>/dev/null | grep -c 'blorcompanycom\|brevolution\|blor-fe' | tr -d ' ') containers"
       ;;
