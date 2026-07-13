@@ -154,6 +154,10 @@ alias d="bprod && docker compose up"                     # everything
 alias dfe="bprod && docker compose up blor-fe"           # storefront + backend
 alias drev="bprod && docker compose up b-revolution"     # admin + backend
 alias ddown="bprod && docker compose down"               # stop ALL (whatever was started)
+# bstack shortcuts (function defined in Functions section)
+alias bm="bstack remote"   # blor on the Mini (default work mode)
+alias bl="bstack local"    # blor local (DB stays on mini via tunnel)
+alias bs="bstack status"   # which mode am I in?
 # Zeus
 alias start_zeus_old='root && docker start zeus20-php-web-1'
 alias start_zeus_all='root && docker start zeus-be-web-1 && zeus_fe && ns'
