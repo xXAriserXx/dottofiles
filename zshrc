@@ -158,6 +158,7 @@ alias ddown="bprod && docker compose down"               # stop ALL (whatever wa
 alias bm="bstack remote"   # blor on the Mini (default work mode)
 alias bl="bstack local"    # blor local (DB stays on mini via tunnel)
 alias bs="bstack status"   # which mode am I in?
+alias bn="bstack restart"  # restart containers on the mini
 # Zeus
 alias start_zeus_old='root && docker start zeus20-php-web-1'
 alias start_zeus_all='root && docker start zeus-be-web-1 && zeus_fe && ns'
@@ -346,7 +347,7 @@ gps() {
 bstack() {
   local mini="james@100.115.194.118"
   local compose=~/Documents/blor/prod/docker-compose.yaml
-  local full_tunnel="ssh -f -N -L 4200:localhost:4200 -L 4001:localhost:4001 -L 3309:localhost:3309"
+  local full_tunnel="ssh -f -N -L 4200:localhost:4200 -L 4001:localhost:4001 -L 3309:localhost:3309 -L 3000:localhost:3000"
   local db_tunnel="ssh -f -N -L 3309:localhost:3309"
   case "$1" in
     local)
@@ -369,6 +370,9 @@ bstack() {
       pkill -f "ssh -f -N -L" 2>/dev/null
       ${=full_tunnel} "$mini" && echo "✅ Remote stack up on mini + tunnel → localhost:4200"
       ;;
+    restart)
+      docker --context mini compose -f $compose restart && echo "🔄 Mini containers restarted"
+      ;;
     status)
       pgrep -f "ssh -f -N -L 4200" >/dev/null && echo "🔗 Tunnel: full (remote mode)" ||
         { pgrep -f "ssh -f -N -L 3309" >/dev/null && echo "🔗 Tunnel: DB-only (local mode)" || echo "🔗 Tunnel: down"; }
@@ -376,7 +380,7 @@ bstack() {
       echo "🖥️  Mini:   $(docker --context mini ps --format '{{.Names}}' 2>/dev/null | grep -c 'blorcompanycom\|brevolution\|blor-fe' | tr -d ' ') containers"
       ;;
     *)
-      echo "usage: bstack local|remote|status" ;;
+      echo "usage: bstack local|remote|restart|status" ;;
   esac
 }
 
