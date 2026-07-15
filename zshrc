@@ -275,9 +275,9 @@ alias hostbillconnect="ssh hostbill@83.217.190.28"
 # ============================================================
 alias navicat='~/Documents/dottofiles/navicat-premium-reset-trial/reset-trial.sh'
 alias fool='cd && cd Desktop/fool/native/ && .build/release/FoolApp'
-alias key="cd ~/Documents/withoutMouse && .build/release/WhiteWindow"
+alias key='launchctl bootstrap "gui/$(id -u)" ~/Library/LaunchAgents/com.james.whitewindow.plist'   # load agent + start app
 alias ww='/Users/james/Documents/withoutMouse/.build/release/WhiteWindow & disown'
-alias killww='pkill WhiteWindow'
+alias killww='launchctl bootout "gui/$(id -u)/com.james.whitewindow"'   # unload agent + stop app
 alias rblor="wk && cd reminders && cat blor.txt"
 alias pass='dc && cd work && n pwd.json'
 alias pwds="n /Users/james/Documents/greyrat-vault/pwds"
