@@ -267,6 +267,7 @@ alias action="open https://github.com/ottimis/B-Revolution/actions https://githu
 alias oportb="open https://docker.blorcompany.com/#!/2/docker/containers"
 alias oportu="open https://portainer.unidata.it/#!/home"
 alias oporto="open http://test-01.otm.ai:9000/#!/1/docker/containers"
+alias testb="open http://test-01.otm.ai:9000/#!/home"
 alias oclick="open https://app.clickup.com/2462893/time"
 alias odeep="open https://chat.deepseek.com/"
 alias nb='open -a "Firefox Developer Edition" "https://new.blorcompany.com?token=pippo"'
