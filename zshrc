@@ -159,6 +159,7 @@ alias bm="bstack remote"   # blor on the Mini (default work mode)
 alias bl="bstack local"    # blor local (DB stays on mini via tunnel)
 alias bs="bstack status"   # which mode am I in?
 alias bn="bstack restart"  # restart containers on the mini
+alias bx="bstack down"     # take down all containers on the mini
 # Zeus
 alias start_zeus_old='root && docker start zeus20-php-web-1'
 alias start_zeus_all='root && docker start zeus-be-web-1 && zeus_fe && ns'
@@ -262,6 +263,7 @@ alias omybe="open https://git.uniot.eu/ottimis/myunidata-be"
 alias obblor="open https://github.com/ottimis/Blorcompany.com"
 alias oblor="open https://github.com/ottimis/blor-fe"
 alias orev="open https://github.com/ottimis/B-Revolution"
+alias action="open https://github.com/ottimis/B-Revolution/actions https://github.com/ottimis/Blorcompany.com/actions"
 alias oportb="open https://docker.blorcompany.com/#!/2/docker/containers"
 alias oportu="open https://portainer.unidata.it/#!/home"
 alias oporto="open http://test-01.otm.ai:9000/#!/1/docker/containers"
@@ -373,6 +375,10 @@ bstack() {
     restart)
       docker --context mini compose -f $compose restart && echo "🔄 Mini containers restarted"
       ;;
+    down)
+      pkill -f "ssh -f -N -L" 2>/dev/null
+      docker --context mini compose -f $compose down && echo "🛑 Mini containers down"
+      ;;
     status)
       pgrep -f "ssh -f -N -L 4200" >/dev/null && echo "🔗 Tunnel: full (remote mode)" ||
         { pgrep -f "ssh -f -N -L 3309" >/dev/null && echo "🔗 Tunnel: DB-only (local mode)" || echo "🔗 Tunnel: down"; }
@@ -380,7 +386,7 @@ bstack() {
       echo "🖥️  Mini:   $(docker --context mini ps --format '{{.Names}}' 2>/dev/null | grep -c 'blorcompanycom\|brevolution\|blor-fe' | tr -d ' ') containers"
       ;;
     *)
-      echo "usage: bstack local|remote|restart|status" ;;
+      echo "usage: bstack local|remote|restart|down|status" ;;
   esac
 }
 
