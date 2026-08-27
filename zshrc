@@ -94,12 +94,15 @@ alias Blor="pj && cd old-blor && cd blor-fe"
 alias bblor="pj && cd Blor/Blorcompany.com"
 alias blorev="pj && cd Blor/B-Revolution"
 alias blorapp="pj && cd blor_app && cd BlorApp"
+alias rel="gck staging && gmg crm-release && gps && gck crm-release"
 alias bdev="cd ~/Documents/blor/dev"
 alias bprod="cd ~/Documents/blor/prod && clear"
 alias br="bprod && cd B-Revolution && clear"
 alias bb="bprod && cd Blorcompany.com && clear"
 alias bf="bprod && cd blor-fe && clear"
 alias bexp="cd ~/Documents/blor/experimental"
+alias ship="gck main && gmg crm-release && gps && gck staging && gmg main && gps && gck crm-release"
+alias shipblor="br && ship && bb && ship"
 alias xray="cd ~/Documents/blor/prod/Blorcompany.com && php tools/codebase-analyzer.php && python3 tools/_build_xray.py && open tools/codebase-xray.html"
 alias oxray="open ~/Documents/blor/prod/Blorcompany.com/tools/codebase-xray.html"
 
@@ -111,6 +114,11 @@ alias mybe="pj && cd unidata/myunidata-be"
 alias mpb="pj && cd unidata/my-uni-pass/myuni-pass-be"
 alias mpf="pj && cd unidata/my-uni-pass/myuni-pass-fe"
 alias hb="dc && cd hostbill_new"
+
+# OG-QR
+alias qr="cd ~/Documents/qr-code"
+alias qrw="qr && cd OG-QR_Web"
+alias qre="qr && cd OG-QR"
 
 # Other projects
 alias lea="cd ~/projects/leamor"
@@ -138,6 +146,7 @@ alias gop="cd && cd Documents/work/pwd"
 alias gp="dc && cd tests && node logHello.js"
 alias iru='cd ~/drills/understanding && claude "drill me"'   # retrieval-practice drill
 alias irw='cd ~/drills/understanding && claude "concept write-up"'   # write derived concepts into concepts.md from memory, coach grades
+alias irc='cd ~/drills/understanding && claude "let'\''s think"'   # consult mode: coach carries full drill/philosophy context, discusses without drilling
 alias norn='cd ~ && claude "/norn"'   # list saved pending chats
 
 # ============================================================
@@ -156,7 +165,7 @@ alias drev="bprod && docker compose up b-revolution"     # admin + backend
 alias ddown="bprod && docker compose down"               # stop ALL (whatever was started)
 # bstack shortcuts (function defined in Functions section)
 alias bm="bstack remote"   # blor on the Mini (default work mode)
-alias bl="bstack local"    # blor local (DB stays on mini via tunnel)
+alias bl="bstack local"    # blor fully local (local DB, seeded from latest backup)
 alias bs="bstack status"   # which mode am I in?
 alias bn="bstack restart"  # restart containers on the mini
 alias bx="bstack down"     # take down all containers on the mini
@@ -342,30 +351,42 @@ gps() {
     git push
 }
 
-# Blor stack switcher: run the admin stack locally or on the Mac mini
-# (docker context "mini" + Mutagen sync). ONE live DB — the mini's — in both
-# modes: remote uses it directly, local reaches it via the 3309 tunnel
-# (docker-compose.mini-db.yaml override). localhost URLs work either way.
-# Emergency fallback with the stale local DB: plain drev/d. — bstack local|remote|status
+# Blor stack switcher (docker context "mini" + Mutagen sync):
+#   bm / remote  — app + DB on the Mac mini, reachable locally via SSH tunnel (:4200)
+#   bl / local   — fully self-contained: local app + LOCAL mariadb, seeded from the
+#                  latest ~/Documents/blor/db-backups dump each run. No mini dependency.
+#   bn / restart — restart the mini's containers
+#   bx / down    — take the mini's containers down
+#   bs / status  — tunnel state + local/mini container counts
 bstack() {
   local mini="james@100.115.194.118"
   local compose=~/Documents/blor/prod/docker-compose.yaml
   local full_tunnel="ssh -f -N -L 4200:localhost:4200 -L 4001:localhost:4001 -L 3309:localhost:3309 -L 3000:localhost:3000"
-  local db_tunnel="ssh -f -N -L 3309:localhost:3309"
   case "$1" in
     local)
-      pkill -f "ssh -f -N -L" 2>/dev/null
-      # keep the mini's mariadb up (single DB); stop only its app containers
-      docker --context mini compose -f $compose stop b-revolution blor-fe web redis 2>/dev/null && echo "🛑 Mini app containers stopped (DB stays up)"
-      docker --context mini compose -f $compose up -d mariadb 2>/dev/null
-      ${=db_tunnel} "$mini" && echo "🔗 DB tunnel → mini:3309"
+      # Fully local: local app + LOCAL mariadb, no dependency on the mini.
+      pkill -f "ssh -f -N -L" 2>/dev/null   # no tunnels needed in local mode
       if ! docker --context desktop-linux info >/dev/null 2>&1; then
         echo "⏳ Starting Docker Desktop..."
         open --background -a Docker
         while ! docker --context desktop-linux info >/dev/null 2>&1; do sleep 1; done
       fi
-      docker --context desktop-linux compose -f $compose -f ~/Documents/blor/prod/docker-compose.mini-db.yaml up -d b-revolution &&
-        echo "✅ Local stack up (DB on mini) → localhost:4200"
+      # local mariadb (plain compose — NOT the mini-db override)
+      docker --context desktop-linux compose -f $compose up -d mariadb || return 1
+      echo "⏳ Waiting for local MariaDB..."
+      until docker --context desktop-linux exec blorcompanycom-mariadb-1 \
+              mariadb -uroot -ppippo.123 -e 'SELECT 1' blor >/dev/null 2>&1; do sleep 1; done
+      # seed with the newest local backup every run (offline; no mini needed)
+      local dump=$(ls -t ~/Documents/blor/db-backups/blor-*.sql.gz 2>/dev/null | head -1)
+      if [[ -n "$dump" ]]; then
+        echo "📦 Restoring $(basename $dump) → local DB..."
+        gunzip -c "$dump" | docker --context desktop-linux exec -i blorcompanycom-mariadb-1 \
+          mariadb -uroot -ppippo.123 blor && echo "✅ Local DB restored from $(basename $dump)"
+      else
+        echo "⚠️  No backup in ~/Documents/blor/db-backups — using existing local data"
+      fi
+      docker --context desktop-linux compose -f $compose up -d b-revolution &&
+        echo "✅ Local stack up (LOCAL DB) → localhost:4200"
       ;;
     remote)
       docker --context desktop-linux compose -f $compose down 2>/dev/null && echo "🛑 Local stack stopped"
@@ -412,6 +433,7 @@ conc() {
 # — keep last so it runs after everything is set up
 # ============================================================
 alias boomi-quiz="python3 /Users/james/.boomi-quiz/app/boomi_quiz.py"
-if [[ -o interactive ]] && [ -t 0 ]; then
-  python3 /Users/james/.boomi-quiz/app/boomi_quiz.py --gate
-fi
+# disabled 2026-08-26 — run `boomi-quiz` manually instead
+# if [[ -o interactive ]] && [ -t 0 ]; then
+#   python3 /Users/james/.boomi-quiz/app/boomi_quiz.py --gate
+# fi
