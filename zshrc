@@ -68,6 +68,7 @@ alias dc="cd ~/Documents"
 alias dw="cd ~/Downloads"
 alias dotto="cd ~/Documents/dottofiles"
 alias wk="cd ~/Documents/work"
+alias life="cd ~/Documents/life"
 alias pj="wk && cd projects"
 alias jt="cd ~/Desktop/just-try"
 alias tl="dc && cd .traveler_logs"
@@ -114,6 +115,7 @@ alias mybe="pj && cd unidata/myunidata-be"
 alias mpb="pj && cd unidata/my-uni-pass/myuni-pass-be"
 alias mpf="pj && cd unidata/my-uni-pass/myuni-pass-fe"
 alias hb="dc && cd hostbill_new"
+alias map="open ~/Documents/hostbill_new/docs/hostbill-map/index.html"
 
 # OG-QR
 alias qr="cd ~/Documents/qr-code"
@@ -123,6 +125,7 @@ alias qre="qr && cd OG-QR"
 # Other projects
 alias lea="cd ~/projects/leamor"
 alias vl="cd ~/projects/Volleyball"
+alias vldev="vl && npm run dev"
 alias rp="cd ~/Documents/reseller-portal"
 alias rpa="cd ~/Documents/reseller-portal/backend"
 alias rpf="cd ~/Documents/reseller-portal/frontend"
@@ -163,6 +166,9 @@ alias d="bprod && docker compose up"                     # everything
 alias dfe="bprod && docker compose up blor-fe"           # storefront + backend
 alias drev="bprod && docker compose up b-revolution"     # admin + backend
 alias ddown="bprod && docker compose down"               # stop ALL (whatever was started)
+# Volleyball stack (Docker Compose app + MariaDB)
+alias vlup="volleyball_stack_up"
+alias vldown="volleyball_stack_down"
 # bstack shortcuts (function defined in Functions section)
 alias bm="bstack remote"   # blor on the Mini (default work mode)
 alias bl="bstack local"    # blor fully local (local DB, seeded from latest backup)
@@ -298,6 +304,20 @@ alias secret='say nandodemo'
 # ============================================================
 # Functions (defined after the aliases they use)
 # ============================================================
+
+# Start or stop the Volleyball Docker Compose stack
+volleyball_stack_up() {
+  if ! docker info >/dev/null 2>&1; then
+    echo "⏳ Starting Docker Desktop..."
+    open --background -a "Docker Desktop"
+    while ! docker info >/dev/null 2>&1; do sleep 1; done
+  fi
+  vl && docker compose up -d --build
+}
+
+volleyball_stack_down() {
+  vl && docker compose down
+}
 
 # Android: connect adb over wifi — connect_android <port>
 connect_android() {
