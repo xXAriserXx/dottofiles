@@ -2,12 +2,23 @@ local wezterm = require("wezterm")
 
 local config = wezterm.config_builder()
 
+-- Codex emits a BEL when it needs approval. Bring that exact pane and its
+-- containing WezTerm window to the foreground, even from another app/Space.
+wezterm.on("bell", function(window, pane)
+  local process_name = pane:get_foreground_process_name() or ""
+  if process_name:lower():find("codex", 1, true) then
+    pane:activate()
+    window:focus()
+  end
+end)
+
 config.font = wezterm.font("MesloLGS Nerd Font Mono")
 config.font_size = 25
 config.enable_tab_bar = true
 config.window_decorations = "RESIZE"
 config.color_scheme = "Catppuccin Frappe"
 config.enable_scroll_bar = false
+config.audible_bell = "SystemBeep"
 
 config.keys = {
   -- Tab movement
