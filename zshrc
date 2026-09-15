@@ -382,7 +382,7 @@ gps() {
 bstack() {
   local mini="james@100.115.194.118"
   local compose=~/Documents/blor/prod/docker-compose.yaml
-  local full_tunnel="ssh -f -N -L 4200:localhost:4200 -L 4001:localhost:4001 -L 3309:localhost:3309 -L 3000:localhost:3000"
+  local full_tunnel="ssh -f -N -L 4200:localhost:4200 -L 4001:localhost:4001 -L 3309:localhost:3309 -L 3000:localhost:3000 -L 3001:localhost:3001"
   case "$1" in
     local)
       # Fully local: local app + LOCAL mariadb, no dependency on the mini.
@@ -412,8 +412,9 @@ bstack() {
     remote)
       docker --context desktop-linux compose -f $compose down 2>/dev/null && echo "🛑 Local stack stopped"
       docker --context mini compose -f $compose up -d b-revolution || return 1
+      ssh "$mini" 'cd ~/volleyball && APP_PORT=3001 ADMIN_ORIGIN=http://localhost:3001 docker compose up -d --build --wait' || return 1
       pkill -f "ssh -f -N -L" 2>/dev/null
-      ${=full_tunnel} "$mini" && echo "✅ Remote stack up on mini + tunnel → localhost:4200"
+      ${=full_tunnel} "$mini" && echo "✅ Remote stacks up on mini + tunnels → localhost:4200, localhost:3001"
       ;;
     restart)
       docker --context mini compose -f $compose restart && echo "🔄 Mini containers restarted"
