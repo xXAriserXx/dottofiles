@@ -170,6 +170,7 @@ alias ddown="bprod && docker compose down"               # stop ALL (whatever wa
 # Volleyball stack (Docker Compose app + MariaDB)
 alias vlup="volleyball_stack_up"
 alias vldown="volleyball_stack_down"
+alias vlmini="volleyball_stack_remote"
 # bstack shortcuts (function defined in Functions section)
 alias bm="bstack remote"   # blor on the Mini (default work mode)
 alias bl="bstack local"    # blor fully local (local DB, seeded from latest backup)
@@ -320,6 +321,14 @@ volleyball_stack_down() {
   vl && docker compose down
 }
 
+volleyball_stack_remote() {
+  local mini="james@100.115.194.118"
+  ssh "$mini" 'cd ~/volleyball && APP_PORT=3001 ADMIN_ORIGIN=http://localhost:3001 docker compose up -d --build --wait' || return 1
+  pkill -f "ssh -f -N -L 3001:localhost:3001" 2>/dev/null
+  ssh -f -N -L 3001:localhost:3001 "$mini" &&
+    echo "✅ Volleyball up on mini + tunnel → localhost:3001"
+}
+
 # Android: connect adb over wifi — connect_android <port>
 connect_android() {
   adb_dir && adb connect 192.168.0.50:${1}
@@ -382,11 +391,12 @@ gps() {
 bstack() {
   local mini="james@100.115.194.118"
   local compose=~/Documents/blor/prod/docker-compose.yaml
-  local full_tunnel="ssh -f -N -L 4200:localhost:4200 -L 4001:localhost:4001 -L 3309:localhost:3309 -L 3000:localhost:3000 -L 3001:localhost:3001"
+  local full_tunnel="ssh -f -N -L 4200:localhost:4200 -L 4001:localhost:4001 -L 3309:localhost:3309 -L 3000:localhost:3000"
   case "$1" in
     local)
       # Fully local: local app + LOCAL mariadb, no dependency on the mini.
-      pkill -f "ssh -f -N -L" 2>/dev/null   # no tunnels needed in local mode
+      pkill -f "ssh -f -N -L 4200:localhost:4200" 2>/dev/null
+      pkill -f "ssh -f -N -L 3309:localhost:3309" 2>/dev/null
       if ! docker --context desktop-linux info >/dev/null 2>&1; then
         echo "⏳ Starting Docker Desktop..."
         open --background -a Docker
@@ -412,15 +422,16 @@ bstack() {
     remote)
       docker --context desktop-linux compose -f $compose down 2>/dev/null && echo "🛑 Local stack stopped"
       docker --context mini compose -f $compose up -d b-revolution || return 1
-      ssh "$mini" 'cd ~/volleyball && APP_PORT=3001 ADMIN_ORIGIN=http://localhost:3001 docker compose up -d --build --wait' || return 1
-      pkill -f "ssh -f -N -L" 2>/dev/null
-      ${=full_tunnel} "$mini" && echo "✅ Remote stacks up on mini + tunnels → localhost:4200, localhost:3001"
+      pkill -f "ssh -f -N -L 4200:localhost:4200" 2>/dev/null
+      pkill -f "ssh -f -N -L 3309:localhost:3309" 2>/dev/null
+      ${=full_tunnel} "$mini" && echo "✅ Remote stack up on mini + tunnel → localhost:4200"
       ;;
     restart)
       docker --context mini compose -f $compose restart && echo "🔄 Mini containers restarted"
       ;;
     down)
-      pkill -f "ssh -f -N -L" 2>/dev/null
+      pkill -f "ssh -f -N -L 4200:localhost:4200" 2>/dev/null
+      pkill -f "ssh -f -N -L 3309:localhost:3309" 2>/dev/null
       docker --context mini compose -f $compose down && echo "🛑 Mini containers down"
       ;;
     status)
