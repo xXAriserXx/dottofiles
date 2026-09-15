@@ -421,10 +421,10 @@ bstack() {
       ;;
     remote)
       docker --context desktop-linux compose -f $compose down 2>/dev/null && echo "🛑 Local stack stopped"
-      docker --context mini compose -f $compose up -d b-revolution || return 1
+      docker --context mini compose -f $compose up -d b-revolution blor-fe || return 1
       pkill -f "ssh -f -N -L 4200:localhost:4200" 2>/dev/null
       pkill -f "ssh -f -N -L 3309:localhost:3309" 2>/dev/null
-      ${=full_tunnel} "$mini" && echo "✅ Remote stack up on mini + tunnel → localhost:4200"
+      ${=full_tunnel} "$mini" && echo "✅ Remote Blor stack up on mini → localhost:3000, localhost:4200"
       ;;
     restart)
       docker --context mini compose -f $compose restart && echo "🔄 Mini containers restarted"
