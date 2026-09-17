@@ -124,6 +124,7 @@ alias qrw="qr && cd OG-QR_Web"
 alias qre="qr && cd OG-QR"
 
 # Other projects
+alias pny="cd ~/Documents/pinoy-marketplace"
 alias lea="cd ~/projects/leamor"
 alias vl="cd ~/projects/Volleyball"
 alias vldev="vl && npm run dev"
