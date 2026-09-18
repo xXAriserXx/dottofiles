@@ -66,10 +66,13 @@ alias shine='sudo shutdown -h now'
 alias de="cd ~/Desktop"
 alias dc="cd ~/Documents"
 alias dw="cd ~/Downloads"
+alias odc="open ~/Documents"    # Finder on Documents
+alias odw="open ~/Downloads"    # Finder on Downloads
 alias dotto="cd ~/Documents/dottofiles"
 alias wk="cd ~/Documents/work"
 alias life="cd ~/Documents/life"
 alias fil="cd ~/Documents/life/filippino"
+alias eng="cd ~/Documents/life/inglese"
 alias pj="wk && cd projects"
 alias jt="cd ~/Desktop/just-try"
 alias tl="dc && cd .traveler_logs"
@@ -117,6 +120,7 @@ alias mpb="pj && cd unidata/my-uni-pass/myuni-pass-be"
 alias mpf="pj && cd unidata/my-uni-pass/myuni-pass-fe"
 alias hb="dc && cd hostbill_new"
 alias map="open ~/Documents/hostbill_new/docs/hostbill-map/index.html"
+alias pdf='open "$(ls -t ~/Documents/hostbill_new/output/pdf/*.html | head -1)"'
 
 # OG-QR
 alias qr="cd ~/Documents/qr-code"
