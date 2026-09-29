@@ -8,7 +8,7 @@ This is a dotfiles repo. All config files are symlinked from here to their syste
 - `aerospace.toml` — Tiling window manager (AeroSpace)
 - `p10k.zsh` — Powerlevel10k prompt theme
 - `nvim/` — Neovim config
-- `yazi/` → `~/.config/yazi/` (yazi.toml, keymap.toml, imgview symlinked one by one) — Terminal file manager; Enter opens files with the same viewers as the `op` function (images full-window in the terminal via `yazi/imgview`, a zoom/pan viewer on the iTerm2 image protocol, never Preview.app); movement is jkl; instead of hjkl
+- `yazi/` → `~/.config/yazi/` (yazi.toml, keymap.toml, imgview symlinked one by one) — Terminal file manager; Enter opens files with the same viewers as the `op` function (images full-window in the terminal via `yazi/imgview`, a zoom/pan viewer: kitty image protocol when available — needs `enable_kitty_graphics` in wezterm.lua — else iTerm2 inline images; never Preview.app); movement is jkl; instead of hjkl
 - `karabiner/` — Keyboard remapping rules (machine-specific, see below)
 - `zprofile`, `zshenv` — Shell env setup (zshenv is empty)
 - `llm.md` — LLM-related notes

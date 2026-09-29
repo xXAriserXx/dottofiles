@@ -19,6 +19,7 @@ config.window_decorations = "RESIZE"
 config.color_scheme = "Catppuccin Frappe"
 config.enable_scroll_bar = false
 config.audible_bell = "SystemBeep"
+config.enable_kitty_graphics = true   -- off by default; yazi/imgview uses the kitty image protocol
 
 config.keys = {
   -- Tab movement

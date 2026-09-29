@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 """Full-window image viewer for WezTerm, used by yazi's image opener.
 
-WezTerm draws iTerm2 inline images but not mpv's kitty output,
-so zoom/pan is done here: the image is decoded once, and each keypress crops it
-in memory with Pillow and redraws.
+Two ways of drawing, picked by asking the terminal at startup:
+- kitty: the image is sent to the terminal once; zoom/pan only move the visible
+  source rectangle, so a keypress sends a few bytes at full resolution.
+  WezTerm needs `config.enable_kitty_graphics = true` for this.
+- iterm: fallback. Each keypress crops the image in memory with Pillow and sends
+  the frame as an iTerm2 inline image.
+IMGVIEW_PROTOCOL=kitty|iterm forces one.
 
 Keys: r zoom in, f zoom out, j left, k down, l up, ; right, 0 reset, q/Esc quit.
 """
@@ -13,7 +17,8 @@ from PIL import Image
 
 ZOOM_STEP = 1.25
 PAN_STEP = 0.15  # fraction of the visible area
-RESOLUTION = 0.75  # frame pixels per screen pixel; lower = lighter for WezTerm to decode
+RESOLUTION = 0.75  # iterm only: frame pixels per screen pixel; lower = lighter for WezTerm to decode
+IMAGE_ID = 7031
 
 
 def term_size():
@@ -21,9 +26,36 @@ def term_size():
     return cols, rows, (xpx or cols * 10), (ypx or rows * 20)
 
 
+def kitty_supported(fd):
+    """Send a kitty graphics query followed by a DA1 query; every terminal answers DA1,
+    and only terminals with kitty graphics answer the first one."""
+    sys.stdout.write("\x1b_Gi=31,s=1,v=1,a=q,t=d,f=24;AAAA\x1b\\\x1b[c")
+    sys.stdout.flush()
+    resp = b""
+    while b"\x1b[?" not in resp or not resp.endswith(b"c"):
+        ready, _, _ = select.select([fd], [], [], 1.0)
+        if not ready:
+            break
+        resp += os.read(fd, 1024)
+    return b"_Gi=31;OK" in resp
+
+
+def kitty_upload(image):
+    buf = io.BytesIO()
+    image.save(buf, "PNG", compress_level=1)
+    data = base64.b64encode(buf.getvalue()).decode()
+    chunks = [data[i:i + 4096] for i in range(0, len(data), 4096)]
+    for n, chunk in enumerate(chunks):
+        more = 1 if n < len(chunks) - 1 else 0
+        head = f"a=t,f=100,i={IMAGE_ID},q=2,m={more}" if n == 0 else f"m={more}"
+        sys.stdout.write(f"\x1b_G{head};{chunk}\x1b\\")
+    sys.stdout.flush()
+
+
 class View:
-    def __init__(self, image):
+    def __init__(self, image, protocol):
         self.im = image
+        self.protocol = protocol
         self.w, self.h = image.size
         self.rect = None  # cell rectangle of the last frame
         self.reset()
@@ -43,23 +75,33 @@ class View:
         cols, rows, tw, th = term_size()
         cw, ch, x, y, scale = self.crop(tw, th)
         ow, oh = max(1, int(cw * scale)), max(1, int(ch * scale))
-        frame = self.im.resize((max(1, int(ow * RESOLUTION)), max(1, int(oh * RESOLUTION))), Image.BICUBIC, box=(x, y, x + cw, y + ch), reducing_gap=2.0)
-        buf = io.BytesIO()
-        frame.save(buf, "JPEG", quality=85)
         # Size in cells, centered; the last row is left for the status line.
         wc = max(1, min(cols, round(ow * cols / tw)))
         hc = max(1, min(rows - 1, round(oh * rows / th)))
         col, row = (cols - wc) // 2, (rows - 1 - hc) // 2
-        data = base64.b64encode(buf.getvalue()).decode()
+
+        if self.protocol == "kitty":
+            # Re-place the already uploaded image (same placement id replaces it),
+            # showing only the source rectangle x,y,w,h scaled to wc x hc cells.
+            picture = (f"\x1b_Ga=p,i={IMAGE_ID},p=1,x={int(x)},y={int(y)},w={max(1, int(cw))},h={max(1, int(ch))},"
+                       f"c={wc},r={hc},C=1,q=2\x1b\\")
+        else:
+            frame = self.im.resize((max(1, int(ow * RESOLUTION)), max(1, int(oh * RESOLUTION))),
+                                   Image.BICUBIC, box=(x, y, x + cw, y + ch), reducing_gap=2.0)
+            buf = io.BytesIO()
+            frame.save(buf, "JPEG", quality=85)
+            data = base64.b64encode(buf.getvalue()).decode()
+            picture = f"\x1b]1337;File=inline=1;width={wc};height={hc};preserveAspectRatio=1:{data}\a"
+
         # Clear only when the frame's footprint changes; otherwise draw over the old one.
         rect = (col, row, wc, hc)
         clear = "\x1b[2J" if rect != self.rect else ""
         self.rect = rect
         # One write per frame, inside a synchronized update (?2026) so WezTerm shows it
         # only once complete: no blank screen while the new picture decodes.
-        sys.stdout.write(f"\x1b[?2026h{clear}\x1b[{row + 1};{col + 1}H"
-                         f"\x1b]1337;File=inline=1;width={wc};height={hc};preserveAspectRatio=1:{data}\a"
-                         f"\x1b[{rows};1H\x1b[2K\x1b[2m {self.zoom:.2f}x  r/f zoom  jkl; move  0 reset  q quit\x1b[0m\x1b[?2026l")
+        sys.stdout.write(f"\x1b[?2026h{clear}\x1b[{row + 1};{col + 1}H{picture}"
+                         f"\x1b[{rows};1H\x1b[2K\x1b[2m {self.zoom:.2f}x  r/f zoom  jkl; move  0 reset  q quit"
+                         f"  [{self.protocol}]\x1b[0m\x1b[?2026l")
         sys.stdout.flush()
 
     def key(self, k):
@@ -98,13 +140,18 @@ def main():
         image = Image.open(io.BytesIO(png))
     else:
         image = Image.open(src)
-    view = View(image.convert("RGB"))  # decode once; JPEG frames need RGB
+    image = image.convert("RGB")  # decode once
 
     fd = sys.stdin.fileno()
     old = termios.tcgetattr(fd)
     sys.stdout.write("\x1b[?1049h\x1b[?25l")
+    protocol = None
     try:
         tty.setcbreak(fd)
+        protocol = os.environ.get("IMGVIEW_PROTOCOL") or ("kitty" if kitty_supported(fd) else "iterm")
+        if protocol == "kitty":
+            kitty_upload(image)
+        view = View(image, protocol)
         size = term_size()
         view.render()
         while True:
@@ -120,6 +167,8 @@ def main():
             if any([view.key(k) for k in keys]):
                 view.render()
     finally:
+        if protocol == "kitty":
+            sys.stdout.write(f"\x1b_Ga=d,d=I,i={IMAGE_ID},q=2\x1b\\")  # free the uploaded image
         termios.tcsetattr(fd, termios.TCSADRAIN, old)
         sys.stdout.write("\x1b[2J\x1b[?25h\x1b[?1049l")
         sys.stdout.flush()
