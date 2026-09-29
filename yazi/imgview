@@ -1,0 +1,132 @@
+#!/usr/bin/env python3
+"""Full-window image viewer for WezTerm, used by yazi's image opener.
+
+WezTerm draws iTerm2 inline images but not mpv's kitty output,
+so zoom/pan is done here: each keypress crops the image with ffmpeg and redraws.
+
+Keys: r zoom in, f zoom out, j left, k down, l up, ; right, 0 reset, q/Esc quit.
+"""
+import base64, fcntl, json, os, select, struct, subprocess, sys, tempfile, termios, tty
+
+ZOOM_STEP = 1.25
+PAN_STEP = 0.15  # fraction of the visible area
+
+
+def term_size():
+    rows, cols, xpx, ypx = struct.unpack("HHHH", fcntl.ioctl(sys.stdout.fileno(), termios.TIOCGWINSZ, b"\0" * 8))
+    return cols, rows, (xpx or cols * 10), (ypx or rows * 20)
+
+
+def image_size(path):
+    out = subprocess.run(
+        ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height", "-of", "json", path],
+        stdin=subprocess.DEVNULL, capture_output=True, text=True, check=True).stdout
+    s = json.loads(out)["streams"][0]
+    return s["width"], s["height"]
+
+
+class View:
+    def __init__(self, path):
+        self.path = path
+        self.w, self.h = image_size(path)
+        self.reset()
+
+    def reset(self):
+        self.zoom, self.cx, self.cy = 1.0, self.w / 2, self.h / 2
+
+    def crop(self, tw, th):
+        fit = min(tw / self.w, th / self.h)          # screen px per image px at zoom 1
+        cw = min(self.w, tw / (fit * self.zoom))
+        ch = min(self.h, th / (fit * self.zoom))
+        self.cx = min(max(self.cx, cw / 2), self.w - cw / 2)
+        self.cy = min(max(self.cy, ch / 2), self.h - ch / 2)
+        return int(cw), int(ch), int(self.cx - cw / 2), int(self.cy - ch / 2), fit * self.zoom
+
+    def render(self, out_png):
+        cols, rows, tw, th = term_size()
+        cw, ch, x, y, scale = self.crop(tw, th)
+        ow, oh = max(1, int(cw * scale)), max(1, int(ch * scale))
+        subprocess.run(
+            ["ffmpeg", "-nostdin", "-v", "error", "-y", "-i", self.path, "-frames:v", "1",
+             "-vf", f"crop={cw}:{ch}:{x}:{y},scale={ow}:{oh}:flags=lanczos", "-q:v", "2", out_png],
+            stdin=subprocess.DEVNULL, check=True)
+        # Size in cells, centered; the last row is left for the status line.
+        wc = max(1, min(cols, round(ow * cols / tw)))
+        hc = max(1, min(rows - 1, round(oh * rows / th)))
+        col, row = (cols - wc) // 2, (rows - 1 - hc) // 2
+        with open(out_png, "rb") as f:
+            data = base64.b64encode(f.read()).decode()
+        # iTerm2 inline image protocol, which WezTerm draws natively.
+        sys.stdout.write(f"\x1b[2J\x1b[{row + 1};{col + 1}H"
+                         f"\x1b]1337;File=inline=1;width={wc};height={hc};preserveAspectRatio=1:{data}\a")
+        sys.stdout.write(f"\x1b[{rows};1H\x1b[2m {self.zoom:.2f}x  r/f zoom  jkl; move  0 reset  q quit\x1b[0m")
+        sys.stdout.flush()
+
+    def key(self, k):
+        _, _, tw, th = term_size()
+        cw, ch, *_ = self.crop(tw, th)
+        if k == "r":
+            self.zoom *= ZOOM_STEP
+        elif k == "f":
+            self.zoom = max(1.0, self.zoom / ZOOM_STEP)
+        elif k == "j":
+            self.cx -= cw * PAN_STEP
+        elif k == ";":
+            self.cx += cw * PAN_STEP
+        elif k == "k":
+            self.cy += ch * PAN_STEP
+        elif k == "l":
+            self.cy -= ch * PAN_STEP
+        elif k == "0":
+            self.reset()
+        else:
+            return False
+        return True
+
+
+def main():
+    if len(sys.argv) != 2:
+        sys.exit("usage: imgview <image>")
+    src = sys.argv[1]
+    if os.environ.get("TERM_PROGRAM") != "WezTerm":
+        subprocess.run(["chafa", "--", src])
+        input()
+        return
+
+    tmp = tempfile.mkdtemp(prefix="imgview-")
+    if src.lower().endswith(".svg"):  # ffmpeg can't read SVG
+        png = os.path.join(tmp, "src.png")
+        subprocess.run(["resvg", "--width", "3000", src, png], check=True)
+        src = png
+    view, frame = View(src), os.path.join(tmp, "frame.jpg")
+
+    fd = sys.stdin.fileno()
+    old = termios.tcgetattr(fd)
+    sys.stdout.write("\x1b[?1049h\x1b[?25l")
+    try:
+        tty.setcbreak(fd)
+        size = term_size()
+        view.render(frame)
+        while True:
+            ready, _, _ = select.select([fd], [], [], 0.3)
+            if not ready:
+                if term_size() != size:  # window resized
+                    size = term_size()
+                    view.render(frame)
+                continue
+            keys = os.read(fd, 64).decode(errors="ignore")  # drain queued presses, redraw once
+            if "q" in keys or "\x1b" in keys:
+                break
+            if any([view.key(k) for k in keys]):
+                view.render(frame)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old)
+        sys.stdout.write("\x1b[2J\x1b[?25h\x1b[?1049l")
+        sys.stdout.flush()
+        for f in os.listdir(tmp):
+            os.remove(os.path.join(tmp, f))
+        os.rmdir(tmp)
+
+
+if __name__ == "__main__":
+    main()

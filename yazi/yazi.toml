@@ -1,10 +1,10 @@
 # Enter opens each file with the same viewer as the `op` function in zshrc.
-# Images open full-window inside the terminal in mpv (no Preview.app window for AeroSpace to tile):
-# r/f zoom, jkl; pan, 0 resets, q returns to yazi. Keys in mpv-image.conf.
+# Images open full-window inside the terminal with ./imgview (no Preview.app window for AeroSpace to tile):
+# r/f zoom, jkl; pan, 0 resets, q returns to yazi.
 
 [opener]
 image = [
-	{ run = 'if [ "$TERM_PROGRAM" = WezTerm ] || [ "$TERM" = xterm-kitty ]; then vo=kitty; else vo=tct; fi; mpv --vo=$vo --really-quiet --image-display-duration=inf --input-conf="$HOME/.config/yazi/mpv-image.conf" -- %s1', block = true, desc = "mpv (zoom r/f, pan jkl;)" },
+	{ run = '"$HOME/.config/yazi/imgview" %s1', block = true, desc = "Full window (zoom r/f, pan jkl;)" },
 ]
 pdf = [
 	{ run = "tdf -- %s1", block = true, desc = "tdf" },
