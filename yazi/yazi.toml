@@ -1,0 +1,24 @@
+# Enter opens each file with the same viewer as the `op` function in zshrc.
+# Images need no opener: the preview pane already shows them.
+
+[opener]
+pdf = [
+	{ run = "tdf -- %s1", block = true, desc = "tdf" },
+]
+video = [
+	{ run = 'if [ "$TERM_PROGRAM" = WezTerm ] || [ "$TERM" = xterm-kitty ]; then mpv --vo=kitty --really-quiet -- %s; else mpv --vo=tct --really-quiet -- %s; fi', block = true, desc = "mpv" },
+]
+audio = [
+	{ run = "mpv --no-video -- %s", block = true, desc = "mpv (audio)" },
+]
+sheet = [
+	{ run = "vd -- %s", block = true, desc = "VisiData" },
+]
+
+[open]
+prepend_rules = [
+	{ url = "*.{pdf,PDF}", use = [ "pdf", "open", "reveal" ] },
+	{ url = "*.{mp4,mkv,MP4,MKV}", use = [ "video", "open", "reveal" ] },
+	{ url = "*.{mp3,m4a,MP3,M4A}", use = [ "audio", "open", "reveal" ] },
+	{ url = "*.{csv,xls,xlsx,CSV,XLS,XLSX}", use = [ "sheet", "open", "reveal" ] },
+]

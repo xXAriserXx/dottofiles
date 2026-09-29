@@ -8,6 +8,7 @@ This is a dotfiles repo. All config files are symlinked from here to their syste
 - `aerospace.toml` — Tiling window manager (AeroSpace)
 - `p10k.zsh` — Powerlevel10k prompt theme
 - `nvim/` — Neovim config
+- `yazi/yazi.toml` → `~/.config/yazi/yazi.toml` — Terminal file manager; Enter opens files with the same viewers as the `op` function
 - `karabiner/` — Keyboard remapping rules (machine-specific, see below)
 - `zprofile`, `zshenv` — Shell env setup (zshenv is empty)
 - `llm.md` — LLM-related notes
