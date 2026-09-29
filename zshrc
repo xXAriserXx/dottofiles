@@ -72,11 +72,16 @@ alias odw="open ~/Downloads"    # Finder on Downloads
 alias dotto="cd ~/Documents/dottofiles"
 alias wk="cd ~/Work"
 alias pj="cd ~/Work/Projects"
+alias wdata="cd ~/Work/Data"
+alias warch="cd ~/Work/Archive"
 alias pers="cd ~/Personal"
 alias ppr="cd ~/Personal/Projects"
-alias life="cd ~/Documents/life"
-alias fil="cd ~/Documents/life/filippino"
-alias eng="cd ~/Documents/life/inglese"
+alias pdocs="cd ~/Personal/Docs"
+alias parch="cd ~/Personal/Archive"
+alias psvc="cd ~/Personal/Services"
+alias life="cd ~/Personal/Docs/life"
+alias fil="cd ~/Personal/Docs/life/filippino"
+alias eng="cd ~/Personal/Docs/life/inglese"
 alias jt="cd ~/Desktop/just-try"
 alias tl="dc && cd .traveler_logs"
 alias play="dc && cd work/playground"
@@ -91,53 +96,53 @@ alias image="media && cd image"
 alias testing="de && cd test"
 alias next="cd ~/nextcloud-files/admin/files"
 alias kaizen='cd "$HOME/Library/CloudStorage/GoogleDrive-jrjrjrpr365@gmail.com/My Drive/DriveSyncFiles/kaizen"'
-alias greyrat="cd /Users/james/Documents/greyrat-vault"
+alias greyrat="cd ~/Personal/Docs/greyrat-vault"
 
 # ============================================================
 # Navigation — projects
 # ============================================================
 # Blor
-alias blor="cd ~/Documents/blor"
+alias blor="cd ~/Work/Projects/blor"
 alias Blor="cd ~/Work/Projects/blor/prod/blor-fe"
 alias bblor="cd ~/Work/Projects/blor/prod/Blorcompany.com"
 alias blorev="cd ~/Work/Projects/blor/prod/B-Revolution"
 alias blorapp="cd ~/Work/Projects/blor/prod/BlorApp"
 alias rel="gck staging && gmg crm-release && gps && gck crm-release"
-alias bdev="cd ~/Documents/blor/dev"
-alias bprod="cd ~/Documents/blor/prod && clear"
+alias bdev="cd ~/Work/Projects/blor/dev"
+alias bprod="cd ~/Work/Projects/blor/prod && clear"
 alias br="bprod && cd B-Revolution && clear"
 alias bb="bprod && cd Blorcompany.com && clear"
 alias bf="bprod && cd blor-fe && clear"
-alias bexp="cd ~/Documents/blor/experimental"
+alias bexp="cd ~/Work/Projects/blor/experimental"
 alias ship="gck main && gmg crm-release && gps && gck staging && gmg main && gps && gck crm-release"
 alias shipblor="br && ship && bb && ship"
-alias xray="cd ~/Documents/blor/prod/Blorcompany.com && php tools/codebase-analyzer.php && python3 tools/_build_xray.py && open tools/codebase-xray.html"
-alias oxray="open ~/Documents/blor/prod/Blorcompany.com/tools/codebase-xray.html"
+alias xray="cd ~/Work/Projects/blor/prod/Blorcompany.com && php tools/codebase-analyzer.php && python3 tools/_build_xray.py && open tools/codebase-xray.html"
+alias oxray="open ~/Work/Projects/blor/prod/Blorcompany.com/tools/codebase-xray.html"
 
 # Unidata
-alias myfee="pj && cd my-unidata-2"
-alias mybee="pj && cd myunidata-be"
-alias myfe="pj && cd unidata/test/myunidata-fe"
-alias mybe="pj && cd unidata/myunidata-be"
-alias mpb="pj && cd unidata/my-uni-pass/myuni-pass-be"
-alias mpf="pj && cd unidata/my-uni-pass/myuni-pass-fe"
-alias hb="dc && cd hostbill_new"
-alias map="open ~/Documents/hostbill_new/docs/hostbill-map/index.html"
-alias pdf='open "$(ls -t ~/Documents/hostbill_new/output/pdf/*.html | head -1)"'
+alias myfee="cd ~/Work/Projects/unidata/myunidata-fe"
+alias mybee="cd ~/Work/Projects/unidata/myunidata-be"
+alias myfe="cd ~/Work/Projects/unidata/myunidata-fe"
+alias mybe="cd ~/Work/Projects/unidata/myunidata-be"
+alias mpb="cd ~/Work/Projects/unidata/password-reset-be"
+alias mpf="cd ~/Work/Projects/unidata/password-reset-fe"
+alias hb="cd ~/Work/Projects/hostbill_new"
+alias map="open ~/Work/Projects/hostbill_new/docs/hostbill-map/index.html"
+alias pdf='open "$(ls -t ~/Work/Projects/hostbill_new/output/pdf/*.html | head -1)"'
 
 # OG-QR
-alias qr="cd ~/Documents/qr-code"
+alias qr="cd ~/Work/Projects/qr-code"
 alias qrw="qr && cd OG-QR_Web"
 alias qre="qr && cd OG-QR"
 
 # Other projects
-alias pny="cd ~/Documents/pinoy-marketplace"
-alias lea="cd ~/projects/leamor"
-alias vl="cd ~/projects/Volleyball"
+alias pny="cd ~/Personal/Projects/pinoy-marketplace"
+alias lea="cd ~/Personal/Projects/leamor"
+alias vl="cd ~/Personal/Projects/Volleyball"
 alias vldev="vl && npm run dev"
-alias rp="cd ~/Documents/reseller-portal"
-alias rpa="cd ~/Documents/reseller-portal/backend"
-alias rpf="cd ~/Documents/reseller-portal/frontend"
+alias rp="cd ~/Work/Projects/reseller-portal"
+alias rpa="cd ~/Work/Projects/reseller-portal/backend"
+alias rpf="cd ~/Work/Projects/reseller-portal/frontend"
 alias zeus_be='cd /Users/dumitruzanogea/Documents/Progetti/New-Zeus/zeus-be'
 alias zeus_fe='cd /Users/dumitruzanogea/Documents/Progetti/New-Zeus/zeus-fe'
 alias adb_dir='root && cd Library/Android/sdk/platform-tools'
@@ -198,7 +203,7 @@ alias kbgn="kubectl get namespaces"
 alias kbgp="kubectl get pods"
 alias kbblor="kubectl get pods -n blor"
 alias kbbfe="kubectl exec -it blor-fe-5d58567b46-knbrr -n blor -- /bin/bash"
-alias temporary="kubectl cp /Users/james/Documents/blor/prod/Blorcompany.com/src/app/vendor/ottimis/phplibs/src/dataBase.php blor/blor-be-6fcd79c89c-xvrrp:/var/www/html/app/vendor/ottimis/phplibs/src/dataBase.php"
+alias temporary="kubectl cp ~/Work/Projects/blor/prod/Blorcompany.com/src/app/vendor/ottimis/phplibs/src/dataBase.php blor/blor-be-6fcd79c89c-xvrrp:/var/www/html/app/vendor/ottimis/phplibs/src/dataBase.php"
 
 # ============================================================
 # Git & GitHub
@@ -227,7 +232,7 @@ alias grm="git remote -v"
 alias gdiff="git diff --cached HEAD > diff.txt"
 alias pull_branches='git remote update origin --prune'
 alias ghls="gh repo list"
-alias cloneblor='cd ~/Documents && if [ ! -d blor ]; then mkdir -p blor/dev blor/prod && for dir in blor/dev blor/prod; do cd ~/Documents/$dir && git clone git@github.com:ottimis/blor-fe.git && git clone git@github.com:ottimis/Blorcompany.com.git && git clone git@github.com:ottimis/B-Revolution.git; done && echo "Successfully cloned all repositories."; else echo "Folder blor already exists. Stopping."; fi'
+alias cloneblor='cd ~/Work/Projects && if [ ! -d blor ]; then mkdir -p blor/dev blor/prod && for dir in blor/dev blor/prod; do cd ~/Work/Projects/$dir && git clone git@github.com:ottimis/blor-fe.git && git clone git@github.com:ottimis/Blorcompany.com.git && git clone git@github.com:ottimis/B-Revolution.git; done && echo "Successfully cloned all repositories."; else echo "Folder blor already exists. Stopping."; fi'
 
 # ============================================================
 # tmux
@@ -305,11 +310,11 @@ alias hostbillconnect="ssh hostbill@83.217.190.28"
 alias navicat='~/Documents/dottofiles/navicat-premium-reset-trial/reset-trial.sh'
 alias fool='cd && cd Desktop/fool/native/ && .build/release/FoolApp'
 alias key='launchctl bootstrap "gui/$(id -u)" ~/Library/LaunchAgents/com.james.whitewindow.plist'   # load agent + start app
-alias ww='/Users/james/Documents/withoutMouse/.build/release/WhiteWindow & disown'
+alias ww='~/Personal/Projects/withoutMouse/.build/release/WhiteWindow & disown'
 alias killww='launchctl bootout "gui/$(id -u)/com.james.whitewindow"'   # unload agent + stop app
 alias rblor="wk && cd reminders && cat blor.txt"
 alias pass='dc && cd work && n pwd.json'
-alias pwds="n /Users/james/Documents/greyrat-vault/pwds"
+alias pwds="n ~/Personal/Docs/greyrat-vault/pwds"
 alias secret='say nandodemo'
 
 # ============================================================
@@ -425,13 +430,13 @@ gps() {
 # Blor stack switcher (docker context "mini" + Mutagen sync):
 #   bm / remote  — app + DB on the Mac mini, reachable locally via SSH tunnel (:4200)
 #   bl / local   — fully self-contained: local app + LOCAL mariadb, seeded from the
-#                  latest ~/Documents/blor/db-backups dump each run. No mini dependency.
+#                  latest ~/Work/Projects/blor/db-backups dump each run. No mini dependency.
 #   bn / restart — restart the mini's containers
 #   bx / down    — take the mini's containers down
 #   bs / status  — tunnel state + local/mini container counts
 bstack() {
   local mini="james@100.115.194.118"
-  local compose=~/Documents/blor/prod/docker-compose.yaml
+  local compose=~/Work/Projects/blor/prod/docker-compose.yaml
   local full_tunnel="ssh -f -N -L 4200:localhost:4200 -L 4001:localhost:4001 -L 3309:localhost:3309 -L 3000:localhost:3000"
   case "$1" in
     local)
@@ -449,13 +454,13 @@ bstack() {
       until docker --context desktop-linux exec blorcompanycom-mariadb-1 \
               mariadb -uroot -ppippo.123 -e 'SELECT 1' blor >/dev/null 2>&1; do sleep 1; done
       # seed with the newest local backup every run (offline; no mini needed)
-      local dump=$(ls -t ~/Documents/blor/db-backups/blor-*.sql.gz 2>/dev/null | head -1)
+      local dump=$(ls -t ~/Work/Projects/blor/db-backups/blor-*.sql.gz 2>/dev/null | head -1)
       if [[ -n "$dump" ]]; then
         echo "📦 Restoring $(basename $dump) → local DB..."
         gunzip -c "$dump" | docker --context desktop-linux exec -i blorcompanycom-mariadb-1 \
           mariadb -uroot -ppippo.123 blor && echo "✅ Local DB restored from $(basename $dump)"
       else
-        echo "⚠️  No backup in ~/Documents/blor/db-backups — using existing local data"
+        echo "⚠️  No backup in ~/Work/Projects/blor/db-backups — using existing local data"
       fi
       docker --context desktop-linux compose -f $compose up -d b-revolution &&
         echo "✅ Local stack up (LOCAL DB) → localhost:4200"
