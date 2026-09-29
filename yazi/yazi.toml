@@ -32,3 +32,7 @@ prepend_rules = [
 [preview]
 max_width  = 2400
 max_height = 2400
+
+# Show dotfiles by default (toggle with `.`).
+[mgr]
+show_hidden = true
