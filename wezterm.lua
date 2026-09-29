@@ -19,6 +19,7 @@ config.window_decorations = "RESIZE"
 config.color_scheme = "Catppuccin Frappe"
 config.enable_scroll_bar = false
 config.audible_bell = "SystemBeep"
+config.enable_kitty_graphics = true   -- off by default; mpv --vo=kitty (op, yazi image viewer) needs it
 
 config.keys = {
   -- Tab movement
