@@ -258,6 +258,7 @@ alias ytmm='yt-dlp -f "bestaudio"'
 alias mu="mpv --no-video"
 alias vi="mpv --loop --fs"     # NB: shadows vi the editor
 alias vlc='open -a VLC'
+alias y='yazi'                 # terminal file browser
 alias makete="audio && mu 'funk universo x ragna crimson (makete kate) [M2VSd6gEO54].m4a'"
 alias stark="video && mpv --fullscreen stark.mp4"
 
