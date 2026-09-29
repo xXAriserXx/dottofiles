@@ -1,7 +1,11 @@
 # Enter opens each file with the same viewer as the `op` function in zshrc.
-# Images need no opener: the preview pane already shows them.
+# Images open full-window inside the terminal (no Preview.app window for AeroSpace to tile);
+# any key returns to yazi.
 
 [opener]
+image = [
+	{ run = 'clear; if [ "$TERM_PROGRAM" = WezTerm ]; then wezterm imgcat --position 0,0 --width 100%% --height 100%% --no-move-cursor %s1; else chafa --size="$(tput cols)x$(tput lines)" -- %s1; fi; stty -echo -icanon; dd bs=1 count=1 >/dev/null 2>&1; stty echo icanon', block = true, desc = "Full window" },
+]
 pdf = [
 	{ run = "tdf -- %s1", block = true, desc = "tdf" },
 ]
@@ -17,8 +21,14 @@ sheet = [
 
 [open]
 prepend_rules = [
+	{ url = "*.{png,jpg,jpeg,webp,gif,svg,PNG,JPG,JPEG,WEBP,GIF,SVG}", use = [ "image", "open", "reveal" ] },
 	{ url = "*.{pdf,PDF}", use = [ "pdf", "open", "reveal" ] },
 	{ url = "*.{mp4,mkv,MP4,MKV}", use = [ "video", "open", "reveal" ] },
 	{ url = "*.{mp3,m4a,MP3,M4A}", use = [ "audio", "open", "reveal" ] },
 	{ url = "*.{csv,xls,xlsx,CSV,XLS,XLSX}", use = [ "sheet", "open", "reveal" ] },
 ]
+
+# Sharper preview pane for large images (defaults: 600x900).
+[preview]
+max_width  = 2400
+max_height = 2400
