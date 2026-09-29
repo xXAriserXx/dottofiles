@@ -10,6 +10,7 @@ typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 # Environment
 # ============================================================
 export PATH="/Users/james/.local/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="/Users/james/.antigravity/antigravity/bin:$PATH"   # Antigravity
 export EDITOR="nvim"
 export AWS_PROFILE="jp"
@@ -242,7 +243,6 @@ alias ncom="nvim /Users/james/Documents/dottofiles/nvim/KEYMAPS.md"
 alias aeroConf="nvim ~/Documents/dottofiles/aerospace.toml"
 alias op1='code -n /Users/jamesjames/Documents/work/projects/blor-fe'
 alias op2='code -n /Users/jamesjames/Documents/work/projects/old-blor/blor-fe'
-alias op='op1 && op2'
 alias cl="claude"
 alias cx="codex"
 alias ima="/Users/jrprecilla/Documents/work/projects/control/ima"
@@ -312,6 +312,38 @@ alias secret='say nandodemo'
 # ============================================================
 # Functions (defined after the aliases they use)
 # ============================================================
+
+# Open a file in the terminal with a viewer suited to its format.
+op() {
+  if (( $# == 0 )); then
+    print -u2 'Usage: op <file> [file ...]'
+    return 2
+  fi
+
+  local file extension
+  for file in "$@"; do
+    if [[ ! -f "$file" ]]; then
+      print -u2 "op: file not found: $file"
+      return 1
+    fi
+
+    extension="${file##*.}"
+    case "${extension:l}" in
+      pdf) tdf -- "$file" || return ;;
+      png|svg|webp|jpg|jpeg) chafa -- "$file" || return ;;
+      mp4|mkv)
+        if [[ "$TERM_PROGRAM" == WezTerm || "$TERM" == xterm-kitty ]]; then
+          mpv --vo=kitty --really-quiet -- "$file" || return
+        else
+          mpv --vo=tct --really-quiet -- "$file" || return
+        fi
+        ;;
+      mp3|m4a) mpv --no-video -- "$file" || return ;;
+      xls|xlsx|csv) vd -- "$file" || return ;;
+      *) print -u2 "op: unsupported format: $file"; return 2 ;;
+    esac
+  done
+}
 
 # Start or stop the Volleyball Docker Compose stack
 volleyball_stack_up() {
