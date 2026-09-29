@@ -13,6 +13,7 @@ from PIL import Image
 
 ZOOM_STEP = 1.25
 PAN_STEP = 0.15  # fraction of the visible area
+RESOLUTION = 0.75  # frame pixels per screen pixel; lower = lighter for WezTerm to decode
 
 
 def term_size():
@@ -24,6 +25,7 @@ class View:
     def __init__(self, image):
         self.im = image
         self.w, self.h = image.size
+        self.rect = None  # cell rectangle of the last frame
         self.reset()
 
     def reset(self):
@@ -41,7 +43,7 @@ class View:
         cols, rows, tw, th = term_size()
         cw, ch, x, y, scale = self.crop(tw, th)
         ow, oh = max(1, int(cw * scale)), max(1, int(ch * scale))
-        frame = self.im.resize((ow, oh), Image.BICUBIC, box=(x, y, x + cw, y + ch), reducing_gap=2.0)
+        frame = self.im.resize((max(1, int(ow * RESOLUTION)), max(1, int(oh * RESOLUTION))), Image.BICUBIC, box=(x, y, x + cw, y + ch), reducing_gap=2.0)
         buf = io.BytesIO()
         frame.save(buf, "JPEG", quality=85)
         # Size in cells, centered; the last row is left for the status line.
@@ -49,10 +51,15 @@ class View:
         hc = max(1, min(rows - 1, round(oh * rows / th)))
         col, row = (cols - wc) // 2, (rows - 1 - hc) // 2
         data = base64.b64encode(buf.getvalue()).decode()
-        # One write per frame: iTerm2 inline image (drawn natively by WezTerm) + status line.
-        sys.stdout.write(f"\x1b[2J\x1b[{row + 1};{col + 1}H"
+        # Clear only when the frame's footprint changes; otherwise draw over the old one.
+        rect = (col, row, wc, hc)
+        clear = "\x1b[2J" if rect != self.rect else ""
+        self.rect = rect
+        # One write per frame, inside a synchronized update (?2026) so WezTerm shows it
+        # only once complete: no blank screen while the new picture decodes.
+        sys.stdout.write(f"\x1b[?2026h{clear}\x1b[{row + 1};{col + 1}H"
                          f"\x1b]1337;File=inline=1;width={wc};height={hc};preserveAspectRatio=1:{data}\a"
-                         f"\x1b[{rows};1H\x1b[2m {self.zoom:.2f}x  r/f zoom  jkl; move  0 reset  q quit\x1b[0m")
+                         f"\x1b[{rows};1H\x1b[2K\x1b[2m {self.zoom:.2f}x  r/f zoom  jkl; move  0 reset  q quit\x1b[0m\x1b[?2026l")
         sys.stdout.flush()
 
     def key(self, k):
