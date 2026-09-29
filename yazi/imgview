@@ -17,7 +17,7 @@ from PIL import Image
 
 ZOOM_STEP = 1.25
 PAN_STEP = 0.15  # fraction of the visible area
-RESOLUTION = 0.75  # iterm only: frame pixels per screen pixel; lower = lighter for WezTerm to decode
+RESOLUTION = 1.0  # iterm only: frame pixels per screen pixel; lower = lighter for WezTerm to decode
 IMAGE_ID = 7031
 
 
