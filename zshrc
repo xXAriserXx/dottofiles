@@ -32,6 +32,10 @@ esac
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
+# Android SDK (brew cask android-commandlinetools) for Expo / React Native builds; puts adb on PATH
+export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
+export PATH="$ANDROID_HOME/platform-tools:$PATH"
+
 # Prompt theme
 source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
