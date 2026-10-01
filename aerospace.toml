@@ -218,8 +218,8 @@ on-mode-changed = []
     alt-shift-k = ['join-with up', 'mode main']
     alt-shift-l = ['join-with right', 'mode main']
 
-# Open Preview (image/PDF viewer) as a floating window instead of tiling it.
+# Open Preview (image/PDF viewer) as a floating window, stretched to full screen width.
 # See: https://nikitabobko.github.io/AeroSpace/guide#on-window-detected-callback
 [[on-window-detected]]
     if.app-id = 'com.apple.Preview'
-    run = 'layout floating'
+    run = ['layout floating', 'exec-and-forget ~/Documents/dottofiles/aerospace-fullwidth.js Preview']
