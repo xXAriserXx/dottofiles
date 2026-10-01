@@ -217,3 +217,9 @@ on-mode-changed = []
     alt-shift-j = ['join-with down', 'mode main']
     alt-shift-k = ['join-with up', 'mode main']
     alt-shift-l = ['join-with right', 'mode main']
+
+# Open Preview (image/PDF viewer) as a floating window instead of tiling it.
+# See: https://nikitabobko.github.io/AeroSpace/guide#on-window-detected-callback
+[[on-window-detected]]
+    if.app-id = 'com.apple.Preview'
+    run = 'layout floating'
