@@ -4,7 +4,7 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Preview only: J or Option+E = previous image, ; or Option+R = next image (Option+PageUp/PageDown)",
+                        "description": "Preview only: J or E (optionally with Option) = previous image, ; or R (optionally with Option) = next image (Option+PageUp/PageDown)",
                         "manipulators": [
                             {
                                 "conditions": [
@@ -39,7 +39,7 @@
                                         "type": "frontmost_application_if"
                                     }
                                 ],
-                                "from": { "key_code": "e", "modifiers": { "mandatory": ["left_option"] } },
+                                "from": { "key_code": "e", "modifiers": { "optional": ["left_option"] } },
                                 "to": [
                                     { "key_code": "page_up", "modifiers": ["left_option"] }
                                 ],
@@ -52,7 +52,7 @@
                                         "type": "frontmost_application_if"
                                     }
                                 ],
-                                "from": { "key_code": "r", "modifiers": { "mandatory": ["left_option"] } },
+                                "from": { "key_code": "r", "modifiers": { "optional": ["left_option"] } },
                                 "to": [
                                     { "key_code": "page_down", "modifiers": ["left_option"] }
                                 ],
