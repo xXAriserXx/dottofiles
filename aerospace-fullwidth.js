@@ -1,7 +1,8 @@
 #!/usr/bin/osascript -l JavaScript
 // Stretch the front window of an app to the full width of the screen it is on
 // (keeps its height and vertical position). Used by aerospace.toml for floating windows.
-// Usage: aerospace-fullwidth.js <process name>   e.g. aerospace-fullwidth.js Preview
+// With "full" as second argument it fills the whole visible screen (width and height).
+// Usage: aerospace-fullwidth.js <process name> [full]   e.g. aerospace-fullwidth.js Preview full
 ObjC.import('AppKit');
 
 function run(argv) {
@@ -26,6 +27,11 @@ function run(argv) {
 
   const vf = screen.visibleFrame;          // excludes menu bar and Dock
   const visTop = primaryH - (vf.origin.y + vf.size.height);
+  if (argv[1] === 'full') {
+    win.position = [vf.origin.x, visTop];
+    win.size = [vf.size.width, vf.size.height];
+    return;
+  }
   const height = Math.min(h, vf.size.height);
   win.position = [vf.origin.x, Math.max(y, visTop)];
   win.size = [vf.size.width, height];
