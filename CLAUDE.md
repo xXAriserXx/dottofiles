@@ -30,3 +30,5 @@ There are two different Karabiner configs for two different machines. Symlink th
 - `karabiner/karabiner-other.json` — for the other machine, no device-specific overrides.
 
 To set up on a new machine: `ln -sf ~/Documents/dottofiles/karabiner/karabiner-<machine>.json ~/.config/karabiner/karabiner.json`
+
+Karabiner does not notice edits to the symlinked file. After editing, reload it: `launchctl kickstart -k gui/$(id -u)/org.pqrs.service.agent.Karabiner-Console-User-Server` (check `~/.local/share/karabiner/log/console_user_server.log` for a new "Load ..." line).
