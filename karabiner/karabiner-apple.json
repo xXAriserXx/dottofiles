@@ -15,10 +15,7 @@
                                 ],
                                 "from": { "key_code": "j" },
                                 "to": [
-                                    {
-                                        "key_code": "non_us_backslash",
-                                        "modifiers": ["left_command", "left_shift"]
-                                    }
+                                    { "shell_command": "~/Documents/dottofiles/preview-cycle.sh prev" }
                                 ],
                                 "type": "basic"
                             },
@@ -31,10 +28,7 @@
                                 ],
                                 "from": { "key_code": "semicolon" },
                                 "to": [
-                                    {
-                                        "key_code": "non_us_backslash",
-                                        "modifiers": ["left_command"]
-                                    }
+                                    { "shell_command": "~/Documents/dottofiles/preview-cycle.sh next" }
                                 ],
                                 "type": "basic"
                             }
