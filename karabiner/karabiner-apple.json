@@ -4,7 +4,7 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Preview only: J = previous window, ; = next window",
+                        "description": "Preview only: J = previous image, ; = next image (Option+PageUp/PageDown)",
                         "manipulators": [
                             {
                                 "conditions": [
@@ -15,7 +15,7 @@
                                 ],
                                 "from": { "key_code": "j" },
                                 "to": [
-                                    { "shell_command": "~/Documents/dottofiles/preview-cycle.sh prev" }
+                                    { "key_code": "page_up", "modifiers": ["left_option"] }
                                 ],
                                 "type": "basic"
                             },
@@ -28,7 +28,7 @@
                                 ],
                                 "from": { "key_code": "semicolon" },
                                 "to": [
-                                    { "shell_command": "~/Documents/dottofiles/preview-cycle.sh next" }
+                                    { "key_code": "page_down", "modifiers": ["left_option"] }
                                 ],
                                 "type": "basic"
                             }
