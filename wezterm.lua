@@ -12,6 +12,28 @@ wezterm.on("bell", function(window, pane)
   end
 end)
 
+-- Color tabs by the project folder they're in (subfolders included).
+-- Colors are from Catppuccin Frappe; other tabs keep the default look.
+local tab_colors = {
+  { path = "/Users/james/Work/Projects/blor/prod", color = "#e78284" },        -- red
+  { path = "/Users/james/Work/Projects/qr-code/OG-QR_Web", color = "#a6d189" }, -- green
+  { path = "/Users/james/Work/Projects/hostbill_new", color = "#8caaee" },     -- blue
+}
+
+wezterm.on("format-tab-title", function(tab)
+  local cwd = tab.active_pane.current_working_dir
+  local path = cwd and (cwd.file_path or tostring(cwd)) or ""
+  for _, rule in ipairs(tab_colors) do
+    if path == rule.path or path:sub(1, #rule.path + 1) == rule.path .. "/" then
+      return {
+        { Background = { Color = tab.is_active and rule.color or "#414559" } },
+        { Foreground = { Color = tab.is_active and "#232634" or rule.color } },
+        { Text = " " .. tab.active_pane.title .. " " },
+      }
+    end
+  end
+end)
+
 config.font = wezterm.font("MesloLGS Nerd Font Mono")
 config.font_size = 25
 config.enable_tab_bar = true
