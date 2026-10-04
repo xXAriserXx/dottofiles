@@ -101,6 +101,7 @@ alias testing="de && cd test"
 alias next="cd ~/nextcloud-files/admin/files"
 alias kaizen='cd "$HOME/Library/CloudStorage/GoogleDrive-jrjrjrpr365@gmail.com/My Drive/DriveSyncFiles/kaizen"'
 alias greyrat="cd ~/Personal/Docs/greyrat-vault"
+alias zan="cd ~/Personal/Projects/zanoba"
 
 # ============================================================
 # Navigation — projects
