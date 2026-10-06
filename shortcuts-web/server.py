@@ -3,10 +3,11 @@
 
 Runs in a container on the Mac mini and re-reads the mounted zshrc on every
 request. The dotfiles post-commit hook (githooks/) copies zshrc there.
-Password-protected (HTTP Basic, any username) via the SHORTCUTS_PASSWORD env
-var; a 30-day cookie saves retyping it. Refuses to start without it.
+Password-protected via the SHORTCUTS_PASSWORD env var: a password-only login
+form (login.html) sets a 30-day cookie. Refuses to start without it.
 """
-import base64, binascii, hashlib, hmac, json, os, re, shlex, sys, time
+import hashlib, hmac, json, os, re, shlex, sys, time
+from urllib.parse import parse_qs
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 HERE  = os.path.dirname(os.path.abspath(__file__))
@@ -135,45 +136,46 @@ def payload():
         "updated": int(mtime),
     }
 
-PAGE = open(os.path.join(HERE, "index.html"), "rb").read()
+PAGE  = open(os.path.join(HERE, "index.html"), "rb").read()
+LOGIN = open(os.path.join(HERE, "login.html"), encoding="utf-8").read()
+COOKIE_AGE = 30 * 24 * 3600
 
 class Handler(BaseHTTPRequestHandler):
-    def send(self, code, body, ctype, cookie=None):
+    def send(self, code, body, ctype, headers=()):
         self.send_response(code)
         self.send_header("Content-Type", ctype)
-        if cookie:
-            self.send_header("Set-Cookie", cookie)
+        for k, v in headers:
+            self.send_header(k, v)
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
         self.end_headers()
         self.wfile.write(body)
 
+    def redirect(self, to, cookie=None):
+        headers = [("Location", to)] + ([("Set-Cookie", cookie)] if cookie else [])
+        self.send(303, b"", "text/plain", headers)
+
+    def login_page(self, error=False):
+        msg = '<p class="err">Password sbagliata</p>' if error else ""
+        self.send(200, LOGIN.replace("<!--ERROR-->", msg).encode(), "text/html; charset=utf-8")
+
     def authed(self):
-        auth = self.headers.get("Authorization", "")
-        if auth.startswith("Basic "):
-            try:
-                _, _, given = base64.b64decode(auth[6:]).decode().partition(":")
-            except (binascii.Error, UnicodeDecodeError):
-                given = ""
-            if hmac.compare_digest(given.encode(), PASSWORD.encode()):
-                return True
         for part in self.headers.get("Cookie", "").split(";"):
             name, _, value = part.strip().partition("=")
             if name == "sc" and hmac.compare_digest(value.encode(), TOKEN.encode()):
                 return True
-        self.send_response(401)
-        self.send_header("WWW-Authenticate", 'Basic realm="shortcuts"')
-        self.send_header("Content-Length", "0")
-        self.end_headers()
         return False
 
     def do_GET(self):
-        if not self.authed():
-            return
         path = self.path.split("?")[0]
+        if path == "/logout":
+            return self.redirect("/", "sc=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax")
+        if not self.authed():
+            if path.startswith("/api/"):
+                return self.send(401, b'{"error": "login required"}', "application/json")
+            return self.login_page(error=self.path.endswith("?e=1"))
         if path == "/":
-            self.send(200, PAGE, "text/html; charset=utf-8",
-                      cookie=f"sc={TOKEN}; Path=/; Max-Age=2592000; HttpOnly; SameSite=Lax")
+            self.send(200, PAGE, "text/html; charset=utf-8")
         elif path == "/api/shortcuts":
             try:
                 body = json.dumps(payload()).encode()
@@ -182,6 +184,17 @@ class Handler(BaseHTTPRequestHandler):
                 self.send(500, json.dumps({"error": str(e)}).encode(), "application/json")
         else:
             self.send(404, b"not found", "text/plain")
+
+    def do_POST(self):
+        if self.path.split("?")[0] != "/login":
+            return self.send(404, b"not found", "text/plain")
+        length = min(int(self.headers.get("Content-Length") or 0), 4096)
+        form = parse_qs(self.rfile.read(length).decode("utf-8", "replace"))
+        given = form.get("password", [""])[0]
+        if hmac.compare_digest(given.encode(), PASSWORD.encode()):
+            return self.redirect("/", f"sc={TOKEN}; Path=/; Max-Age={COOKIE_AGE}; HttpOnly; SameSite=Lax")
+        time.sleep(1)   # slow down guessing
+        self.redirect("/?e=1")
 
     def log_message(self, *args):
         pass

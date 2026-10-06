@@ -89,6 +89,7 @@
   .empty, .error { text-align: center; color: var(--muted); padding: 50px 0; }
   .error { color: var(--k-git); }
   footer { color: var(--muted); font-size: 12px; text-align: center; padding: 20px 16px 30px; }
+  footer a { color: inherit; }
   @media (max-width: 600px) {
     .row { grid-template-columns: 1fr; }
     .search kbd { display: none; }
@@ -185,10 +186,12 @@ function render() {
 async function load() {
   try {
     const r = await fetch("/api/shortcuts");
+    if (r.status === 401) { location.reload(); return; }
     data = await r.json();
     if (data.error) throw new Error(data.error);
     render();
-    $("#foot").textContent = "zshrc updated " + new Date(data.updated * 1000).toLocaleString();
+    $("#foot").innerHTML = "zshrc updated " + esc(new Date(data.updated * 1000).toLocaleString()) +
+      ' · <a href="/logout">logout</a>';
   } catch (e) {
     $("#list").innerHTML = `<div class="error">Couldn't load shortcuts: ${esc(String(e.message || e))}</div>`;
     $("#stats").textContent = "";
