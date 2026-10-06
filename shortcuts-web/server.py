@@ -4,9 +4,11 @@
 Reads zshrc from a bare mirror of the dotfiles repo kept next to this script
 (fetched at most once a minute). A mirror rather than ~/Documents/dottofiles
 because launchd agents can't read ~/Documents (macOS privacy protection).
+Password-protected (HTTP Basic, any username) via the SHORTCUTS_PASSWORD env
+var; a 30-day cookie saves retyping it. Refuses to start without it.
 Python 3.9 stdlib only — runs on the Mac mini's system python.
 """
-import json, os, re, shlex, subprocess, threading, time
+import base64, binascii, hashlib, hmac, json, os, re, shlex, subprocess, sys, threading, time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 HERE  = os.path.dirname(os.path.abspath(__file__))
@@ -15,6 +17,8 @@ REF   = os.environ.get("DOTFILES_REF", "main")
 HOST  = os.environ.get("SHORTCUTS_HOST", "100.115.194.118")   # Tailscale only
 PORT  = int(os.environ.get("SHORTCUTS_PORT", "8092"))
 FETCH_EVERY = 60
+PASSWORD = os.environ.get("SHORTCUTS_PASSWORD", "")
+TOKEN = hashlib.sha256(("shortcuts:" + PASSWORD).encode()).hexdigest()[:32]
 
 _lock = threading.Lock()
 _last_fetch = 0.0
@@ -160,18 +164,42 @@ def payload():
 PAGE = open(os.path.join(HERE, "index.html"), "rb").read()
 
 class Handler(BaseHTTPRequestHandler):
-    def send(self, code, body, ctype):
+    def send(self, code, body, ctype, cookie=None):
         self.send_response(code)
         self.send_header("Content-Type", ctype)
+        if cookie:
+            self.send_header("Set-Cookie", cookie)
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
         self.end_headers()
         self.wfile.write(body)
 
+    def authed(self):
+        auth = self.headers.get("Authorization", "")
+        if auth.startswith("Basic "):
+            try:
+                _, _, given = base64.b64decode(auth[6:]).decode().partition(":")
+            except (binascii.Error, UnicodeDecodeError):
+                given = ""
+            if hmac.compare_digest(given.encode(), PASSWORD.encode()):
+                return True
+        for part in self.headers.get("Cookie", "").split(";"):
+            name, _, value = part.strip().partition("=")
+            if name == "sc" and hmac.compare_digest(value.encode(), TOKEN.encode()):
+                return True
+        self.send_response(401)
+        self.send_header("WWW-Authenticate", 'Basic realm="shortcuts"')
+        self.send_header("Content-Length", "0")
+        self.end_headers()
+        return False
+
     def do_GET(self):
+        if not self.authed():
+            return
         path = self.path.split("?")[0]
         if path == "/":
-            self.send(200, PAGE, "text/html; charset=utf-8")
+            self.send(200, PAGE, "text/html; charset=utf-8",
+                      cookie=f"sc={TOKEN}; Path=/; Max-Age=2592000; HttpOnly; SameSite=Lax")
         elif path == "/api/shortcuts":
             try:
                 body = json.dumps(payload()).encode()
@@ -185,5 +213,7 @@ class Handler(BaseHTTPRequestHandler):
         pass
 
 if __name__ == "__main__":
+    if not PASSWORD:
+        sys.exit("SHORTCUTS_PASSWORD is not set — refusing to serve without a password")
     print(f"shortcuts on http://{HOST}:{PORT}", flush=True)
     ThreadingHTTPServer((HOST, PORT), Handler).serve_forever()
