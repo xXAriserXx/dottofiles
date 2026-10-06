@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shell Shortcuts</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23161a22'/><text x='6' y='22' font-family='monospace' font-size='16' fill='%2386e1a0'>&gt;_</text></svg>">
+<style>
+  :root {
+    --bg: #f6f5f1; --panel: #ffffff; --ink: #1d2027; --muted: #6b6f78; --line: #e4e2dc;
+    --accent: #2f7d4f; --accent-soft: #e3f1e7; --mark: #fff0a8;
+    --k-nav: #2f6fb3; --k-url: #a24ea0; --k-git: #c25a1c; --k-open: #8a6d1a; --k-cmd: #5d636e; --k-fn: #2f7d4f;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12141a; --panel: #1a1d25; --ink: #e6e7ea; --muted: #8d929c; --line: #2a2e38;
+      --accent: #86e1a0; --accent-soft: #1d3326; --mark: #5a4c12;
+      --k-nav: #7db4f0; --k-url: #e19ae0; --k-git: #f0a070; --k-open: #e0c46a; --k-cmd: #a3a8b2; --k-fn: #86e1a0;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: 130px; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 var(--sans); }
+  header {
+    position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); border-bottom: 1px solid var(--line);
+  }
+  .bar { max-width: 1100px; margin: 0 auto; padding: 14px 16px 10px; }
+  .top { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  h1 { font: 600 18px var(--mono); margin: 0; }
+  h1 span { color: var(--accent); }
+  .stats { color: var(--muted); font-size: 13px; }
+  .search { position: relative; margin-top: 10px; }
+  .search input {
+    width: 100%; padding: 10px 12px 10px 36px; font: 15px var(--mono); color: var(--ink);
+    background: var(--panel); border: 1px solid var(--line); border-radius: 9px; outline: none;
+  }
+  .search input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .search svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+  .search kbd {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    font: 12px var(--mono); color: var(--muted); border: 1px solid var(--line); border-radius: 5px; padding: 0 6px;
+  }
+  .chips { display: flex; gap: 6px; overflow-x: auto; padding: 10px 0 2px; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: none; font: 12.5px var(--sans); color: var(--muted); background: var(--panel); text-decoration: none;
+    border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; cursor: pointer; white-space: nowrap;
+  }
+  .chip:hover { color: var(--ink); border-color: var(--muted); }
+  .chip b { font-weight: 600; color: var(--ink); margin-left: 4px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 8px 16px 60px; }
+  section { margin-top: 26px; }
+  h2 {
+    font: 600 13px var(--sans); text-transform: uppercase; letter-spacing: .06em; color: var(--muted);
+    margin: 0 0 8px; display: flex; align-items: center; gap: 8px;
+  }
+  h2::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .note {
+    padding: 8px 14px 4px; font-size: 12.5px; color: var(--muted); font-style: italic; white-space: pre-line;
+    border-top: 1px solid var(--line);
+  }
+  .card > :first-child { border-top: 0; }
+  .row {
+    display: grid; grid-template-columns: minmax(90px, 170px) 1fr; gap: 4px 16px; align-items: baseline;
+    padding: 7px 14px; border-top: 1px solid var(--line);
+  }
+  .note + .row { border-top: 0; }
+  .row:hover { background: color-mix(in srgb, var(--accent-soft) 45%, transparent); }
+  .name {
+    font: 600 14px var(--mono); color: var(--ink); background: none; border: 0; padding: 0; text-align: left;
+    cursor: pointer; display: flex; align-items: center; gap: 7px; min-width: 0; word-break: break-all;
+  }
+  .name::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--k, var(--k-cmd)); }
+  .name:hover { color: var(--accent); }
+  .name.copied::after { content: "copied"; font: 500 11px var(--sans); color: var(--accent); }
+  .body { min-width: 0; }
+  .cmd { font: 13px/1.45 var(--mono); color: var(--muted); word-break: break-word; }
+  .cmd a { color: var(--k-url); }
+  .desc { font-size: 13px; margin-top: 1px; white-space: pre-line; }
+  .row.fn .cmd { font-style: italic; font-family: var(--sans); }
+  .line { font: 11px var(--mono); color: var(--muted); opacity: .6; margin-left: 6px; }
+  mark { background: var(--mark); color: inherit; border-radius: 2px; }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); padding: 6px 0 0; }
+  .legend i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; }
+  .empty, .error { text-align: center; color: var(--muted); padding: 50px 0; }
+  .error { color: var(--k-git); }
+  footer { color: var(--muted); font-size: 12px; text-align: center; padding: 20px 16px 30px; }
+  @media (max-width: 600px) {
+    .row { grid-template-columns: 1fr; }
+    .search kbd { display: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="top">
+      <h1><span>&gt;_</span> shortcuts</h1>
+      <div class="stats" id="stats">loading…</div>
+    </div>
+    <div class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search names, commands, notes…" autocomplete="off" spellcheck="false" autofocus>
+      <kbd>/</kbd>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="legend">
+      <span><i style="background:var(--k-nav)"></i>cd</span>
+      <span><i style="background:var(--k-url)"></i>url</span>
+      <span><i style="background:var(--k-open)"></i>open</span>
+      <span><i style="background:var(--k-git)"></i>git</span>
+      <span><i style="background:var(--k-cmd)"></i>command</span>
+      <span><i style="background:var(--k-fn)"></i>function</span>
+    </div>
+  </div>
+</header>
+<main id="list"><div class="empty">loading…</div></main>
+<footer id="foot"></footer>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+let data = null;
+
+function hl(text, terms) { return hlHtml(esc(text), terms); }
+
+function hlHtml(out, terms) {
+  for (const t of terms) {
+    const re = new RegExp("(" + esc(t).replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "gi");
+    out = out.replace(/(<[^>]*>)|([^<]+)/g, (m, tag, txt) => tag || txt.replace(re, "<mark>$1</mark>"));
+  }
+  return out;
+}
+
+function linkify(html, urls) {
+  for (const u of urls) {
+    const e = esc(u);
+    html = html.split(e).join(`<a href="${e}" target="_blank" rel="noopener">${e}</a>`);
+  }
+  return html;
+}
+
+function render() {
+  if (!data) return;
+  const terms = $("#q").value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const matches = it => !terms.length || terms.every(t =>
+    [it.name, it.value || "", it.note || ""].some(f => f.toLowerCase().includes(t)));
+  let html = "", chips = "", shown = 0;
+
+  for (const sec of data.sections) {
+    let rows = "", pendingNote = "", n = 0;
+    for (const it of sec.items) {
+      if (it.type === "note") { pendingNote = it.text; continue; }
+      if (!matches(it)) continue;
+      if (pendingNote) { rows += `<div class="note">${esc(pendingNote)}</div>`; pendingNote = ""; }
+      const fn = it.type === "function";
+      const k = fn ? "fn" : it.kind;
+      const cmd = fn ? (it.note ? "" : "function") : hlHtml(linkify(esc(it.value), it.urls), terms);
+      rows += `<div class="row${fn ? " fn" : ""}">
+        <button class="name" style="--k:var(--k-${k})" data-copy="${esc(it.name)}" title="Copy">${hl(it.name, terms)}</button>
+        <div class="body">
+          ${cmd ? `<div class="cmd">${cmd}<span class="line">:${it.line}</span></div>` : ""}
+          ${it.note ? `<div class="desc">${hl(it.note, terms)}${fn ? `<span class="line">:${it.line}</span>` : ""}</div>` : ""}
+        </div></div>`;
+      n++;
+    }
+    if (!n) continue;
+    shown += n;
+    const id = slug(sec.title);
+    html += `<section id="${id}"><h2>${esc(sec.title)}</h2><div class="card">${rows}</div></section>`;
+    chips += `<a class="chip" href="#${id}">${esc(sec.title)}<b>${n}</b></a>`;
+  }
+  $("#list").innerHTML = html || `<div class="empty">No shortcut matches “${esc($("#q").value)}”</div>`;
+  $("#chips").innerHTML = chips;
+  const total = data.aliases + data.functions;
+  $("#stats").textContent = terms.length
+    ? `${shown} of ${total} match`
+    : `${data.aliases} aliases · ${data.functions} functions`;
+}
+
+async function load() {
+  try {
+    const r = await fetch("/api/shortcuts");
+    data = await r.json();
+    if (data.error) throw new Error(data.error);
+    render();
+    $("#foot").innerHTML = `zshrc @ ${esc(data.source)}${data.commit ? " — " + esc(data.commit) : ""}` +
+      (data.fetch_error ? `<br>couldn't fetch latest: ${esc(data.fetch_error)}` : "");
+  } catch (e) {
+    $("#list").innerHTML = `<div class="error">Couldn't load shortcuts: ${esc(String(e.message || e))}</div>`;
+    $("#stats").textContent = "";
+  }
+}
+
+$("#q").addEventListener("input", () => { render(); window.scrollTo(0, 0); });
+document.addEventListener("keydown", e => {
+  if (e.key === "/" && document.activeElement !== $("#q")) { e.preventDefault(); $("#q").focus(); $("#q").select(); }
+  if (e.key === "Escape") { $("#q").value = ""; render(); }
+});
+$("#list").addEventListener("click", async e => {
+  const b = e.target.closest("[data-copy]");
+  if (!b) return;
+  try { await navigator.clipboard.writeText(b.dataset.copy); } catch {
+    const t = document.createElement("textarea"); t.value = b.dataset.copy;
+    document.body.append(t); t.select(); document.execCommand("copy"); t.remove();
+  }
+  b.classList.add("copied"); setTimeout(() => b.classList.remove("copied"), 1100);
+});
+load();
+</script>
+</body>
+</html>
