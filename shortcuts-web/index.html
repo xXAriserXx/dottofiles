@@ -188,8 +188,7 @@ async function load() {
     data = await r.json();
     if (data.error) throw new Error(data.error);
     render();
-    $("#foot").innerHTML = `zshrc @ ${esc(data.source)}${data.commit ? " — " + esc(data.commit) : ""}` +
-      (data.fetch_error ? `<br>couldn't fetch latest: ${esc(data.fetch_error)}` : "");
+    $("#foot").textContent = "zshrc updated " + new Date(data.updated * 1000).toLocaleString();
   } catch (e) {
     $("#list").innerHTML = `<div class="error">Couldn't load shortcuts: ${esc(String(e.message || e))}</div>`;
     $("#stats").textContent = "";

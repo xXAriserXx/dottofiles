@@ -1,0 +1,8 @@
+#!/bin/sh
+# Copy the committed zshrc to the Mac mini, where shortcuts-web serves it.
+# Backgrounded so commits never wait on the network; fails silently if the
+# Mini is unreachable (the next commit catches up).
+# Enabled per clone with: git config core.hooksPath githooks
+dest=shortcuts-web/data
+(git show HEAD:zshrc | ssh -o ConnectTimeout=5 -o BatchMode=yes minish \
+  "mkdir -p $dest && cat > $dest/.zshrc.tmp && mv $dest/.zshrc.tmp $dest/zshrc") >/dev/null 2>&1 &

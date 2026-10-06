@@ -1,0 +1,14 @@
+# Deployed on the Mac mini in ~/shortcuts-web. SHORTCUTS_PASSWORD comes from
+# .env next to this file (not in the repo); data/zshrc is pushed by the
+# dotfiles post-commit hook.
+services:
+  shortcuts-web:
+    build: .
+    container_name: shortcuts-web
+    restart: unless-stopped
+    environment:
+      SHORTCUTS_PASSWORD: ${SHORTCUTS_PASSWORD:?set SHORTCUTS_PASSWORD in .env}
+    ports:
+      - "100.115.194.118:8092:8092"   # Tailscale only
+    volumes:
+      - ./data:/data:ro

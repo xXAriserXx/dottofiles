@@ -1,51 +1,25 @@
 #!/usr/bin/env python3
 """Web page listing the aliases and functions defined in the dotfiles zshrc.
 
-Reads zshrc from a bare mirror of the dotfiles repo kept next to this script
-(fetched at most once a minute). A mirror rather than ~/Documents/dottofiles
-because launchd agents can't read ~/Documents (macOS privacy protection).
+Runs in a container on the Mac mini and re-reads the mounted zshrc on every
+request. The dotfiles post-commit hook (githooks/) copies zshrc there.
 Password-protected (HTTP Basic, any username) via the SHORTCUTS_PASSWORD env
 var; a 30-day cookie saves retyping it. Refuses to start without it.
-Python 3.9 stdlib only — runs on the Mac mini's system python.
 """
-import base64, binascii, hashlib, hmac, json, os, re, shlex, subprocess, sys, threading, time
+import base64, binascii, hashlib, hmac, json, os, re, shlex, sys, time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 HERE  = os.path.dirname(os.path.abspath(__file__))
-REPO  = os.environ.get("DOTFILES_REPO", os.path.join(HERE, "dotfiles.git"))
-REF   = os.environ.get("DOTFILES_REF", "main")
-HOST  = os.environ.get("SHORTCUTS_HOST", "100.115.194.118")   # Tailscale only
+ZSHRC = os.environ.get("ZSHRC", "/data/zshrc")
+HOST  = os.environ.get("SHORTCUTS_HOST", "0.0.0.0")
 PORT  = int(os.environ.get("SHORTCUTS_PORT", "8092"))
-FETCH_EVERY = 60
 PASSWORD = os.environ.get("SHORTCUTS_PASSWORD", "")
 TOKEN = hashlib.sha256(("shortcuts:" + PASSWORD).encode()).hexdigest()[:32]
 
-_lock = threading.Lock()
-_last_fetch = 0.0
-_fetch_error = ""
-
-def git(*args, timeout=10):
-    r = subprocess.run(["git", "-C", REPO] + list(args), capture_output=True,
-                       text=True, timeout=timeout)
-    return r.returncode, r.stdout, r.stderr.strip()
-
 def load_zshrc():
-    """Return (text, source label, commit line, fetch error)."""
-    global _last_fetch, _fetch_error
-    with _lock:
-        if time.time() - _last_fetch > FETCH_EVERY:
-            _last_fetch = time.time()
-            try:
-                rc, _, err = git("fetch", "-q", "--prune")
-                _fetch_error = "" if rc == 0 else (err or "git fetch failed")
-            except subprocess.TimeoutExpired:
-                _fetch_error = "git fetch timed out"
-        fetch_error = _fetch_error
-    rc, text, err = git("show", REF + ":zshrc")
-    if rc != 0:
-        raise RuntimeError("can't read zshrc from " + REPO + ": " + err)
-    _, commit, _ = git("log", "-1", "--format=%h · %s · %cr", REF)
-    return text, REF, commit.strip(), fetch_error
+    """Return (text, mtime)."""
+    with open(ZSHRC, encoding="utf-8") as f:
+        return f.read(), os.fstat(f.fileno()).st_mtime
 
 ALIAS_RE = re.compile(r"^\s*alias\s+([^=\s]+)=(.*)$")
 FUNC_RE  = re.compile(r"^\s*(?:function\s+([\w-]+)\s*(?:\(\s*\))?|([\w-]+)\s*\(\s*\))\s*\{")
@@ -153,12 +127,12 @@ def parse(text):
     return out
 
 def payload():
-    text, source, commit, fetch_error = load_zshrc()
+    text, mtime = load_zshrc()
     sections = parse(text)
     count = lambda t: sum(1 for s in sections for it in s["items"] if it["type"] == t)
     return {
         "sections": sections, "aliases": count("alias"), "functions": count("function"),
-        "source": source, "commit": commit, "fetch_error": fetch_error,
+        "updated": int(mtime),
     }
 
 PAGE = open(os.path.join(HERE, "index.html"), "rb").read()
