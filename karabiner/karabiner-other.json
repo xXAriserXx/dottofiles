@@ -577,7 +577,7 @@
                             },
                             {
                                 "from": {
-                                    "key_code": "8",
+                                    "key_code": "9",
                                     "modifiers": {
                                         "mandatory": ["left_option"],
                                         "optional": ["any"]
@@ -593,7 +593,7 @@
                             },
                             {
                                 "from": {
-                                    "key_code": "9",
+                                    "key_code": "0",
                                     "modifiers": {
                                         "mandatory": ["left_option"],
                                         "optional": ["any"]
@@ -1246,7 +1246,7 @@
                             },
                             {
                                 "from": {
-                                    "key_code": "8",
+                                    "key_code": "9",
                                     "modifiers": {
                                         "mandatory": ["left_option"],
                                         "optional": ["any"]
@@ -1262,7 +1262,7 @@
                             },
                             {
                                 "from": {
-                                    "key_code": "9",
+                                    "key_code": "0",
                                     "modifiers": {
                                         "mandatory": ["left_option"],
                                         "optional": ["any"]
