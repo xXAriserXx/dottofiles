@@ -223,3 +223,36 @@ on-mode-changed = []
 [[on-window-detected]]
     if.app-id = 'com.apple.Preview'
     run = ['layout floating', 'exec-and-forget ~/Documents/dottofiles/aerospace-fullwidth.js Preview']
+
+# Send apps to their workspace when they open a window.
+[[on-window-detected]]
+    if.app-id = 'org.mozilla.nightlyunofficial'
+    run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
+    if.app-id = 'org.mozilla.firefoxdeveloperedition'
+    run = 'move-node-to-workspace F'
+
+[[on-window-detected]]
+    if.app-id = 'com.apple.mail'
+    run = 'move-node-to-workspace M'
+
+[[on-window-detected]]
+    if.app-id = 'com.navicat.NavicatPremium'
+    run = 'move-node-to-workspace Q'
+
+[[on-window-detected]]
+    if.app-id = 'com.github.wez.wezterm'
+    run = 'move-node-to-workspace T'
+
+[[on-window-detected]]
+    if.app-id = 'com.microsoft.teams2'
+    run = 'move-node-to-workspace V'
+
+[[on-window-detected]]
+    if.app-id = 'app.freelens.Freelens'
+    run = 'move-node-to-workspace X'
+
+[[on-window-detected]]
+    if.app-id = 'com.usebruno.app'
+    run = 'move-node-to-workspace C'
