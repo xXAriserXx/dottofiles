@@ -243,7 +243,7 @@ on-mode-changed = []
 
 [[on-window-detected]]
     if.app-id = 'com.github.wez.wezterm'
-    run = 'move-node-to-workspace T'
+    run = 'move-node-to-workspace D'
 
 [[on-window-detected]]
     if.app-id = 'com.microsoft.teams2'
