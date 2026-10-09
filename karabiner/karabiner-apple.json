@@ -1331,23 +1331,22 @@
                         ]
                     },
                     {
-                        "description": "YUNZII M1: front side button (button 5) = scroll to top (Home; Cmd+Shift+S in WezTerm)",
+                        "description": "YUNZII M1: front side button (button 5) = scroll to top (Home), back side button (button 4) = scroll to bottom (End)",
                         "manipulators": [
-                            {
-                                "conditions": [
-                                    { "identifiers": [{ "product_id": 64108, "vendor_id": 9639 }], "type": "device_if" },
-                                    { "bundle_identifiers": ["^com\\.github\\.wez\\.wezterm$"], "type": "frontmost_application_if" }
-                                ],
-                                "from": { "pointing_button": "button5" },
-                                "to": [{ "key_code": "s", "modifiers": ["left_command", "left_shift"] }],
-                                "type": "basic"
-                            },
                             {
                                 "conditions": [
                                     { "identifiers": [{ "product_id": 64108, "vendor_id": 9639 }], "type": "device_if" }
                                 ],
                                 "from": { "pointing_button": "button5" },
                                 "to": [{ "key_code": "home" }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    { "identifiers": [{ "product_id": 64108, "vendor_id": 9639 }], "type": "device_if" }
+                                ],
+                                "from": { "pointing_button": "button4" },
+                                "to": [{ "key_code": "end" }],
                                 "type": "basic"
                             }
                         ]
