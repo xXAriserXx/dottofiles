@@ -260,3 +260,7 @@ on-mode-changed = []
 [[on-window-detected]]
     if.app-id = 'com.microsoft.VSCode'
     run = 'move-node-to-workspace A'
+
+[[on-window-detected]]
+    if.app-id = 'com.apple.finder'
+    run = 'move-node-to-workspace T'
