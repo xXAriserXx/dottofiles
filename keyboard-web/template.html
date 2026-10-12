@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Keyboard Configs</title>
+<style>
+:root{--bg:#0d1117;--panel:#161d27;--line:#d8e2ee;--dim:#3a4656;--teal:#1fc8a0;--fg:#e8eef5;--mut:#8b98a8;--u:min(calc((100vw - 64px) / 16.4), calc((100vh - 190px) / 6.3))}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 600px at 50% 0,#243044,#0d1117);color:var(--fg);font:15px/1.5 -apple-system,system-ui,sans-serif;min-height:100vh}
+.wrap{margin:0 auto;padding:14px 16px 30px}
+h1{margin:0;font-size:20px;font-weight:600}h1 span{color:var(--teal)}
+.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:10px}.top .bar{margin:0}.adv{margin-left:auto}.advbox{display:none}.show-adv .advbox{display:block}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.sep{width:1px;height:24px;background:var(--dim);margin:0 6px}
+.pill{border:1.5px solid var(--teal);color:var(--teal);background:transparent;border-radius:999px;padding:4px 16px;font:inherit;cursor:pointer}
+.pill.on{background:var(--teal);color:#06231c;font-weight:600}
+.src{border-color:var(--mut);color:var(--mut)}.src.on{background:var(--fg);border-color:var(--fg);color:#0d1117}
+.board{background:rgba(10,14,20,.7);border-radius:14px;padding:16px}
+.inner{width:max-content;margin:auto}.bar{gap:6px}.pill{padding:3px 12px;font-size:14px}
+.row{display:flex;gap:4px;margin-bottom:4px}
+.key{height:var(--u);border:1.5px solid var(--line);border-radius:999px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+ color:var(--fg);position:relative;flex:none;cursor:default;line-height:1.05;transition:.1s;user-select:none}
+.key .l{font-size:calc(var(--u)*.24);opacity:.9}.key .m{font-size:calc(var(--u)*.28);font-weight:700;color:var(--fg);max-width:100%;overflow:hidden;white-space:nowrap}
+.key.mapped{background:rgba(120,130,145,.22);border-color:#6b7686}
+.key.mapped .l{font-size:calc(var(--u)*.17);opacity:.55}
+.key img{width:calc(var(--u)*.48);height:calc(var(--u)*.48);margin-top:1px}.key .ab{font-size:9px;opacity:.7;max-width:46px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.key.app{border-color:#6b7686;background:rgba(120,130,145,.22)}
+.key.blocked{border:1.5px dashed #6b7686;background:rgba(120,130,145,.1);opacity:1}.key.blocked .l{color:#8b98a8;opacity:1}.key.blocked .m,.key.blocked img{color:#6b7686;filter:grayscale(1);opacity:.6}.key .kb{font-size:calc(var(--u)*.2);color:#8b98a8;font-weight:700}.key .kb::before{content:'⊘ ';font-size:.9em}
+.key.free .m{color:#7ff0ad}.key.free{border-color:#3ddc84;background:rgba(61,220,132,.14);color:#7ff0ad;opacity:1}
+.key.free.minor{border-color:rgba(61,220,132,.45);background:rgba(61,220,132,.05);color:rgba(127,240,173,.6)}
+.key.dim{opacity:.4}
+.key.mod{cursor:pointer}
+.key.sel{background:var(--teal);border-color:var(--teal);color:#06231c}
+.key.cond::after{content:"";position:absolute;top:6px;right:12px;width:6px;height:6px;border-radius:50%;background:#ffb454}
+.key.active{outline:2px solid #fff}
+.info{margin-top:12px;min-height:84px;background:var(--panel);border-radius:10px;padding:12px 16px;font-size:14px}
+.info b{color:var(--teal)}.info code,.list code{font:13px ui-monospace,Menlo,monospace;background:#0d1117;padding:1px 6px;border-radius:5px}
+.note{color:var(--mut);font-size:12px;margin-top:8px;text-align:center}
+.list{margin-top:12px;color:var(--mut);font-size:13px}
+.apps{margin-top:22px}.apps h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.apps div{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:6px}
+.apps span{background:var(--panel);border-radius:8px;padding:6px 12px;font-size:13px;display:flex;justify-content:space-between;gap:8px}
+
+</style></head><body><div class="wrap">
+<div class="top"><h1>My <span>Keyboard</span> Configs</h1><div class="bar" id="srcs"></div><div class="bar" id="mods"></div><button class="pill src adv" id="advbtn">Advanced</button></div>
+<div class="board"><div class="inner" id="kb"></div></div>
+<div class="advbox"><div class="info" id="info">Hover or tap a key.</div>
+<div class="list" id="extra"></div>
+<div class="note">Green key = free to assign · Gray dashed key = taken by Karabiner (AeroSpace never sees it) · Orange dot = app-specific rule · AeroSpace <code>alt</code> shown as ⌥ · built <span id="d"></span></div>
+<div class="apps" id="apps"></div></div>
+</div>
+<script>
+const D=/*DATA*/null;document.getElementById('d').textContent=D.built;
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+// [id, legend, width-in-units]
+const K=(id,l,w=1)=>({id,l,w});
+const L=[
+ [K('escape','esc'),...[1,2,3,4,5,6,7,8,9,10,11,12].map(n=>K('f'+n,'F'+n))],
+ [K('grave_accent_and_tilde','`'),...'1234567890'.split('').map(c=>K(c,c)),K('hyphen','-'),K('equal_sign','='),K('delete_or_backspace','⌫',1.6)],
+ [K('tab','⇥',1.5),...'qwertyuiop'.split('').map(c=>K(c,c.toUpperCase())),K('open_bracket','['),K('close_bracket',']'),K('backslash','\\',1.1)],
+ [K('caps_lock','⇪',1.8),...'asdfghjkl'.split('').map(c=>K(c,c.toUpperCase())),K('semicolon',';'),K('quote',"'"),K('return_or_enter','↩',1.9)],
+ [K('left_shift','⇧',2.3),...'zxcvbnm'.split('').map(c=>K(c,c.toUpperCase())),K('comma',','),K('period','.'),K('slash','/'),K('right_shift','⇧',2.3)],
+ [K('left_control','control',1.3),K('left_option','option',1.3),K('left_command','command',1.5),K('spacebar','',5.2),K('right_command','command',1.5),K('right_option','option',1.3),K('left_arrow','←'),K('down_arrow','↓'),K('up_arrow','↑'),K('right_arrow','→')]
+];
+const aliases={space:'spacebar'};
+const PILLS=[['cmdL','⌘ left','left_command'],['cmdR','⌘ right','right_command'],['optL','⌥ left','left_option'],['optR','⌥ right','right_option'],['shift','⇧ shift','left_shift'],['ctrl','⌃ control','left_control']];
+const SRC=[['aero','AeroSpace'],['svc','AeroSpace service mode'],['kar','Karabiner']];
+const modKeyToPill={left_command:'cmdL',right_command:'cmdR',left_option:'optL',right_option:'optR',left_shift:'shift',right_shift:'shift',left_control:'ctrl'};
+let src='aero',sel=new Set(['optL']);
+const same=(a,b)=>a.length===b.length&&a.every(x=>b.includes(x));
+const wsLayer=()=>src==='aero'&&(same([...sel].sort(),['optL'])||same([...sel].sort(),['optL','shift']));
+function blocker(id){if(src==='kar')return null;const m=[...sel];
+ return D.entries.find(e=>e.src==='kar'&&!e.cond&&(aliases[e.key]||e.key)===id&&(e.any?e.mods.every(x=>m.includes(x)):same([...m].sort(),e.mods))&&e.mods.length)||null}
+function cells(){const m={};D.entries.filter(e=>e.src===src&&same([...sel].sort(),e.mods)).forEach(e=>{const k=aliases[e.key]||e.key;(m[k]=m[k]||[]).push(e)});return m}
+function render(){
+ document.getElementById('srcs').innerHTML=SRC.map(([id,n])=>`<button class="pill src ${id===src?'on':''}" data-s="${id}">${n}</button>`).join('');
+ document.getElementById('mods').innerHTML='<span style="color:var(--mut)">Hold:</span>'+PILLS.map(([id,n])=>`<button class="pill ${sel.has(id)?'on':''}" data-m="${id}">${n}</button>`).join('')+'<span class="sep"></span><button class="pill src" data-m="clear">clear</button>';
+ const c=cells();const shown=new Set();
+ document.getElementById('kb').innerHTML=L.map(r=>'<div class="row">'+r.map(k=>{
+   const es=c[k.id]||[];es.length&&shown.add(k.id);
+   const pid=modKeyToPill[k.id];const isSel=pid&&sel.has(pid)&&(k.id!=='right_shift');
+   const w=k.w*56+(k.w-1)*4;
+const bl=blocker(k.id);const wa=wsLayer()&&D.wsapps[k.id]||[];
+   const pid0=0;
+   const wsOnly=src==='aero'&&wsLayer()&&es.length&&es.every(e=>/^(move-node-to-)?workspace [A-Z0-9]$/.test(e.full))&&!wa.length;
+   const free=src!=='kar'&&!wa.length&&!bl&&!modKeyToPill[k.id]&&k.id!=='caps_lock'&&(!es.length||wsOnly);
+   const minor=free&&(/^f\d+$/.test(k.id)||['escape','spacebar','left_arrow','right_arrow','up_arrow','down_arrow'].includes(k.id));
+   const cls=['key',free?'free':'',minor?'minor':'',(es.length&&!free)?'mapped':(free?'':(sel.size||src!=='kar'?'dim':'')),pid?'mod':'',isSel?'sel':'',es.some(e=>e.cond)?'cond':''].join(' ');
+   let body=wa.length?wa.slice(0,2).map(a=>a.icon?`<img src="${a.icon}" alt="">`:`<span class="m">${esc(a.name[0])}</span>`).join('')+(wa.length>1?'':''):(es.length?`<span class="m">${esc(es[0].short)}</span>`:'');
+   if(bl)body=(es.length||wa.length?`<span style="opacity:.35;text-decoration:line-through;display:flex;gap:2px">${body}</span>`:'')+`<span class="kb">${esc(bl.short)}</span>`;
+   return `<div class="${cls} ${wa.length?'app':''} ${bl?'blocked':''}" data-k="${k.id}" style="width:calc(${k.w} * var(--u) + ${(k.w-1)*4}px)"><span class="l">${k.l}</span>${body}</div>`}).join('')+'</div>').join('');
+ const other=Object.entries(c).filter(([k])=>!shown.has(k)).flatMap(([k,v])=>v);
+ document.getElementById('extra').innerHTML=other.length?'Not on this keyboard view: '+other.map(e=>`<code>${esc(e.key)}</code> → <code>${esc(e.short)}</code> <small>(${esc(e.rule)})</small>`).join(' · '):'';
+ document.getElementById('apps').innerHTML=src==='aero'?'<h2>App → workspace rules</h2><div>'+D.apps.map(([a,r])=>`<span><code>${esc(a)}</code><code>${esc(r)}</code></span>`).join('')+'</div>':'';
+ info(null)}
+function info(id){const el=document.getElementById('info');if(!id){el.innerHTML=`Layer: <b>${[...sel].map(s=>PILLS.find(p=>p[0]===s)[1]).join(' + ')||'no modifier'}</b> — hover or tap a key to see what it does.`;return}
+ const es=cells()[id]||[];el.innerHTML=(wsLayer()&&D.wsapps[id]?`<div>Apps on workspace <b>${esc(id.toUpperCase())}</b>: ${D.wsapps[id].map(a=>esc(a.name)).join(', ')}</div>`:'')+(es.length?es.map(e=>`<div><b>${esc(id)}</b> → <code>${esc(e.full)}</code> <small style="color:var(--mut)">${esc(e.rule)}${e.cond?' · app-specific':''}</small></div>`).join(''):`<span style="color:var(--mut)">${esc(id)}: nothing mapped on this layer</span>`)}
+document.addEventListener('click',e=>{
+ const s=e.target.closest('[data-s]');if(s){src=s.dataset.s;sel=new Set(src==='aero'?['optL']:[]);return render()}
+ const m=e.target.closest('[data-m]');if(m){const v=m.dataset.m;v==='clear'?sel.clear():(sel.has(v)?sel.delete(v):sel.add(v));return render()}
+ const k=e.target.closest('.key');if(k){const p=modKeyToPill[k.dataset.k];if(p){sel.has(p)?sel.delete(p):sel.add(p);return render()}info(k.dataset.k)}});
+document.addEventListener('mouseover',e=>{const k=e.target.closest('.key');if(k)info(k.dataset.k)});
+document.getElementById('advbtn').onclick=e=>{const on=document.body.classList.toggle('show-adv');e.target.classList.toggle('on',on)};
+render();
+</script></body></html>
