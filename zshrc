@@ -326,6 +326,8 @@ alias pass='dc && cd work && n pwd.json'
 alias pwds="n ~/Personal/Docs/greyrat-vault/pwds"
 alias 1p='command op'   # 1Password CLI (`op` is the file viewer function below)
 alias secret='say nandodemo'
+alias wsq='launchctl bootout "gui/$(id -u)/com.james.wsq" 2>/dev/null; launchctl bootstrap "gui/$(id -u)" ~/overlay/com.james.wsq.plist'   # random workspace prompt every minute, runs without a terminal
+alias wsqstop='launchctl bootout "gui/$(id -u)/com.james.wsq"; pkill -x overlay'   # stop it + hide any overlay
 
 # ============================================================
 # Functions (defined after the aliases they use)
@@ -515,6 +517,15 @@ conc() {
   } > "$tmp" && mv "$tmp" "$f"
   ${EDITOR:-nvim} +$((spine + 2)) "$f"
 }
+
+# OpenCode with the OpenRouter key from the Keychain (item "openrouter-api-key"),
+# passed only to opencode itself, not exported to every shell.
+opencode() {
+  OPENROUTER_API_KEY=$(security find-generic-password -s openrouter-api-key -w) command opencode "$@"
+}
+
+# Rotate the OpenRouter key in the Keychain (prompts for the new key, nothing in history)
+alias orkey='security add-generic-password -U -a "$USER" -s openrouter-api-key -w'
 
 
 # ============================================================
