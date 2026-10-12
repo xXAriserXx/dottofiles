@@ -226,6 +226,10 @@ on-mode-changed = []
 
 # Send apps to their workspace when they open a window.
 [[on-window-detected]]
+    if.app-id = 'com.1password.1password'
+    run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
     if.app-id = 'org.mozilla.nightlyunofficial'
     run = 'move-node-to-workspace 1'
 
