@@ -67,7 +67,7 @@ for src,mode in (('aero','main'),('svc','service')):
         E.append(dict(src=src,mods=ms,key=key,short=ashort(c if isinstance(cmd,str) else cmd[0]),full=c,rule='AeroSpace '+mode+' mode',cond=False))
 apps=[[(lambda i:i)(w['if']['app-id']),' ; '.join(w['run']) if isinstance(w['run'],list) else w['run']] for w in aero['on-window-detected']]
 import base64,re
-NAMES={'com.apple.Preview':'Preview','org.mozilla.nightlyunofficial':'Firefox Nightly','org.mozilla.firefoxdeveloperedition':'Firefox Dev Edition','com.apple.mail':'Mail','com.navicat.NavicatPremium':'Navicat','com.github.wez.wezterm':'WezTerm','com.microsoft.teams2':'Teams','app.freelens.Freelens':'Freelens','com.usebruno.app':'Bruno','com.apple.finder':'Finder','com.microsoft.VSCode':'VS Code'}
+NAMES={'com.apple.Preview':'Preview','org.mozilla.nightlyunofficial':'Firefox Nightly','org.mozilla.firefoxdeveloperedition':'Firefox Dev Edition','com.apple.mail':'Mail','com.navicat.NavicatPremium':'Navicat','com.github.wez.wezterm':'WezTerm','com.microsoft.teams2':'Teams','app.freelens.Freelens':'Freelens','com.usebruno.app':'Bruno','com.apple.finder':'Finder','com.microsoft.VSCode':'VS Code','org.openvpn.client.app':'OpenVPN'}
 def icon(i):
     f=f'icons/{i}.png'
     return 'data:image/png;base64,'+base64.b64encode(open(f,'rb').read()).decode() if os.path.exists(f) else None
