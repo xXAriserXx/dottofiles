@@ -78,6 +78,7 @@ for w in aero['on-window-detected']:
     i=w['if']['app-id']
     if m: wsapps.setdefault(m.group(1).lower(),[]).append(dict(id=i,name=NAMES.get(i,i),icon=icon(i)))
     else: apps_float=1
-data={'wsapps':wsapps,'entries':E,'apps':apps,'built':datetime.date.today().isoformat()}
+raw={'aerospace.toml':open('../aerospace.toml').read(),'karabiner.json':open('../karabiner/karabiner-apple.json').read()}
+data={'raw':raw,'wsapps':wsapps,'entries':E,'apps':apps,'built':datetime.date.today().isoformat()}
 os.makedirs('site',exist_ok=True); open('site/index.html','w').write(open('template.html').read().replace('/*DATA*/null',json.dumps(data)))
 print(len(E),'entries')

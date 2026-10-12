@@ -7,7 +7,7 @@
 body{margin:0;background:radial-gradient(1200px 600px at 50% 0,#243044,#0d1117);color:var(--fg);font:15px/1.5 -apple-system,system-ui,sans-serif;min-height:100vh}
 .wrap{margin:0 auto;padding:14px 16px 30px}
 h1{margin:0;font-size:20px;font-weight:600}h1 span{color:var(--teal)}
-.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:10px}.top .bar{margin:0}.adv{margin-left:auto}.advbox{display:none}.show-adv .advbox{display:block}
+.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:10px}.top .bar{margin:0}.exp{margin-left:auto;position:relative}.menu{display:none;position:absolute;right:0;top:36px;z-index:10;background:var(--panel);border:1px solid var(--dim);border-radius:10px;padding:8px;min-width:250px;box-shadow:0 8px 30px #000a}.menu.open{display:block}.menu div{display:flex;gap:6px;align-items:center;justify-content:space-between;padding:4px 2px;font-size:14px}.menu button{border:1px solid var(--mut);color:var(--fg);background:transparent;border-radius:999px;padding:2px 12px;font:inherit;font-size:13px;cursor:pointer}.menu button:hover{background:var(--teal);color:#06231c;border-color:var(--teal)}.advbox{display:none}.show-adv .advbox{display:block}
 .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
 .sep{width:1px;height:24px;background:var(--dim);margin:0 6px}
 .pill{border:1.5px solid var(--teal);color:var(--teal);background:transparent;border-radius:999px;padding:4px 16px;font:inherit;cursor:pointer}
@@ -39,7 +39,7 @@ h1{margin:0;font-size:20px;font-weight:600}h1 span{color:var(--teal)}
 .apps span{background:var(--panel);border-radius:8px;padding:6px 12px;font-size:13px;display:flex;justify-content:space-between;gap:8px}
 
 </style></head><body><div class="wrap">
-<div class="top"><h1>My <span>Keyboard</span> Configs</h1><div class="bar" id="srcs"></div><div class="bar" id="mods"></div><button class="pill src adv" id="advbtn">Advanced</button></div>
+<div class="top"><h1>My <span>Keyboard</span> Configs</h1><div class="bar" id="srcs"></div><div class="bar" id="mods"></div><span class="adv exp"><button class="pill src" id="expbtn">Export ▾</button><div class="menu" id="expmenu"></div></span><button class="pill src" id="advbtn">Advanced</button></div>
 <div class="board"><div class="inner" id="kb"></div></div>
 <div class="advbox"><div class="info" id="info">Hover or tap a key.</div>
 <div class="list" id="extra"></div>
@@ -97,6 +97,15 @@ document.addEventListener('click',e=>{
  const m=e.target.closest('[data-m]');if(m){const v=m.dataset.m;v==='clear'?sel.clear():(sel.has(v)?sel.delete(v):sel.add(v));return render()}
  const k=e.target.closest('.key');if(k){const p=modKeyToPill[k.dataset.k];if(p){sel.has(p)?sel.delete(p):sel.add(p);return render()}info(k.dataset.k)}});
 document.addEventListener('mouseover',e=>{const k=e.target.closest('.key');if(k)info(k.dataset.k)});
+const menu=document.getElementById('expmenu');
+menu.innerHTML=Object.keys(D.raw).map(n=>`<div><code>${n}</code><span><button data-dl="${n}">Download</button> <button data-cp="${n}">Copy</button></span></div>`).join('')+'<div><span>Both</span><button data-dl="*">Download both</button></div>';
+const dl=n=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([D.raw[n]],{type:'text/plain'}));a.download=n;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+document.getElementById('expbtn').onclick=e=>{e.stopPropagation();menu.classList.toggle('open')};
+document.addEventListener('click',e=>{if(!e.target.closest('.exp'))menu.classList.remove('open')});
+menu.onclick=async e=>{const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.dl==='*')Object.keys(D.raw).forEach((n,i)=>setTimeout(()=>dl(n),i*300));
+ else if(b.dataset.dl)dl(b.dataset.dl);
+ else if(b.dataset.cp){try{if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(D.raw[b.dataset.cp]);else{const x=document.createElement('textarea');x.value=D.raw[b.dataset.cp];document.body.appendChild(x);x.select();if(!document.execCommand('copy'))throw 0;x.remove()}const o=b.textContent;b.textContent='Copied';setTimeout(()=>b.textContent=o,1200)}catch(_){b.textContent='Blocked'}}};
 document.getElementById('advbtn').onclick=e=>{const on=document.body.classList.toggle('show-adv');e.target.classList.toggle('on',on)};
 render();
 </script></body></html>
