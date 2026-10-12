@@ -64,6 +64,7 @@ alias ip='curl -s ifconfig.me && echo'
 alias bi="brew install"
 alias sl='pmset sleepnow'
 alias shine='sudo shutdown -h now'
+alias mcpq='uv run --directory ~/Documents/mcp-query mcp-query ui'   # open the mcp-query web UI (http://localhost:9847)
 
 # ============================================================
 # Navigation — general folders
