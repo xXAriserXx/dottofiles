@@ -324,6 +324,7 @@ alias killww='launchctl bootout "gui/$(id -u)/com.james.whitewindow"'   # unload
 alias rblor="wk && cd reminders && cat blor.txt"
 alias pass='dc && cd work && n pwd.json'
 alias pwds="n ~/Personal/Docs/greyrat-vault/pwds"
+alias 1p='command op'   # 1Password CLI (`op` is the file viewer function below)
 alias secret='say nandodemo'
 
 # ============================================================
