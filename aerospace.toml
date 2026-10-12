@@ -231,7 +231,7 @@ on-mode-changed = []
 
 [[on-window-detected]]
     if.app-id = 'org.mozilla.nightlyunofficial'
-    run = 'move-node-to-workspace 1'
+    run = 'move-node-to-workspace N'
 
 [[on-window-detected]]
     if.app-id = 'org.mozilla.firefoxdeveloperedition'
