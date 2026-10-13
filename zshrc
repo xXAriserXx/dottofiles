@@ -295,20 +295,24 @@ alias micmac="switch 'MacBook Air Microphone'"
 alias ohost="open https://unistack-dev.unidata.it"
 alias ohostad="open https://unistack-dev.unidata.it/admin/"
 alias edit='open "https://unistack-dev.unidata.it/admin/?cmd=theme_config&action=config&id=1"'
-alias ouni='open "https://unistack-dev.unidata.it/admin/index.php?cmd=unidata"'
+alias uni='open "https://unistack-dev.unidata.it/admin/index.php?cmd=unidata"'
+alias ouni=uni   # old name
 alias omap='open "https://unistack-dev.unidata.it/admin/index.php?cmd=unidata&view=mappings"'
 alias omyfe="open https://git.uniot.eu/ottimis/myunidata-fe"
 alias omybe="open https://git.uniot.eu/ottimis/myunidata-be"
 alias obblor="open https://github.com/ottimis/Blorcompany.com"
 alias oblor="open https://github.com/ottimis/blor-fe"
 alias orev="open https://github.com/ottimis/B-Revolution"
-alias action="open https://github.com/ottimis/B-Revolution/actions https://github.com/ottimis/Blorcompany.com/actions"
+alias gha="open https://github.com/ottimis/B-Revolution/actions https://github.com/ottimis/Blorcompany.com/actions"
+alias action=gha   # old name
 alias oportb="open https://docker.blorcompany.com/#!/2/docker/containers"
 alias oportu="open https://portainer.unidata.it/#!/home"
 alias oporto="open http://test-01.otm.ai:9000/#!/1/docker/containers"
 alias opm='open "http://100.115.194.118:9000/#!/3/docker/dashboard"'
-alias oalias="open http://100.115.194.118:8092"   # this file's aliases/functions, served from the Mini (shortcuts-web/)
-alias okeys="open http://100.115.194.118:8093"   # AeroSpace/Karabiner keyboard view, served from the Mini (keyboard-web/)
+alias ali="open http://100.115.194.118:8092"   # this file's aliases/functions, served from the Mini (shortcuts-web/)
+alias oalias=ali   # old name
+alias kbd="open http://100.115.194.118:8093"   # AeroSpace/Karabiner keyboard view, served from the Mini (keyboard-web/)
+alias okeys=kbd   # old name
 alias oberr="open http://100.115.194.118:8094"   # BLOR prod errors from CloudWatch, served from the Mini (blor-errors/)
 alias oq="open http://localhost:8079"   # OG-QR_Web local (docker compose)
 alias tb="open http://test-01.otm.ai:9000/#!/1/docker/containers"
