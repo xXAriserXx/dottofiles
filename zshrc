@@ -14,7 +14,7 @@ export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="/Users/james/.antigravity/antigravity/bin:$PATH"   # Antigravity
 export EDITOR="nvim"
 export AWS_PROFILE="jp"
-alias awslogin="aws sso login --profile jp"
+alias awsl="aws sso login --profile jp"   # one login covers both profiles: jp (JPDev) and blorteam (BlorTeam)
 export DYLD_LIBRARY_PATH="/opt/homebrew/opt/expat/lib"
 
 HISTSIZE=1000000
