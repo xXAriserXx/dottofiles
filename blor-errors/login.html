@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BLOR Errors</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23161a22'/><text x='12' y='23' font-family='monospace' font-size='16' fill='%23ff7a6b'>!</text></svg>">
+<style>
+  :root {
+    --bg: #f6f5f1; --panel: #ffffff; --ink: #1d2027; --muted: #6b6f78; --line: #e4e2dc;
+    --accent: #c2412d; --accent-soft: #f8e4df; --err: #b3401c;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12141a; --panel: #1a1d25; --ink: #e6e7ea; --muted: #8d929c; --line: #2a2e38;
+      --accent: #ff7a6b; --accent-soft: #3a1f1b; --err: #f0a070;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 16px;
+    background: var(--bg); color: var(--ink); font: 15px/1.5 var(--sans);
+  }
+  form {
+    width: 100%; max-width: 340px; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 12px; padding: 26px 24px 24px;
+  }
+  h1 { font: 600 18px var(--mono); margin: 0 0 18px; }
+  h1 span { color: var(--accent); }
+  input[type=password] {
+    width: 100%; padding: 10px 12px; font: 15px var(--mono); color: var(--ink);
+    background: var(--bg); border: 1px solid var(--line); border-radius: 9px; outline: none;
+  }
+  input[type=password]:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  button {
+    width: 100%; margin-top: 12px; padding: 10px; font: 600 14px var(--sans); cursor: pointer;
+    color: var(--bg); background: var(--ink); border: 0; border-radius: 9px;
+  }
+  button:hover { background: var(--accent); }
+  .err { color: var(--err); font-size: 13px; margin: 0 0 10px; }
+  .err code { font: 12px var(--mono); }
+</style>
+</head>
+<body>
+<form method="post" action="/login">
+  <h1><span>!</span> blor errors</h1>
+  <!--ERROR-->
+  <input type="text" name="username" value="blor-errors" autocomplete="username" hidden>
+  <input type="password" name="password" placeholder="Password" autocomplete="current-password" autofocus required>
+  <button type="submit">Log in</button>
+</form>
+</body>
+</html>
