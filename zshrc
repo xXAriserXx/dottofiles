@@ -314,6 +314,7 @@ alias oalias=ali   # old name
 alias kbd="open http://100.115.194.118:8093"   # AeroSpace/Karabiner keyboard view, served from the Mini (keyboard-web/)
 alias okeys=kbd   # old name
 alias oberr="open http://100.115.194.118:8094"   # BLOR prod errors from CloudWatch, served from the Mini (blor-errors/)
+alias wwg="open http://100.115.194.118:8095"   # WhiteWindow practice game, served from the Mini (withoutMouse/game_server.py)
 alias oq="open http://localhost:8079"   # OG-QR_Web local (docker compose)
 alias tb="open http://test-01.otm.ai:9000/#!/1/docker/containers"
 alias oclick="open https://app.clickup.com/2462893/time"
