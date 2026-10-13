@@ -44,6 +44,14 @@
          padding: 6px 12px; font: 13px var(--sans); cursor: pointer; }
   .btn:hover { border-color: var(--accent); }
   .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .export { position: relative; }
+  .export summary { list-style: none; }
+  .export summary::-webkit-details-marker { display: none; }
+  .export .menu { position: absolute; right: 0; top: calc(100% + 4px); z-index: 5; background: var(--panel);
+                  border: 1px solid var(--line); border-radius: 9px; overflow: hidden; min-width: 150px; }
+  .export .menu button { display: block; width: 100%; text-align: left; border: 0; background: none; color: var(--ink);
+                         padding: 8px 12px; font: 13px var(--sans); cursor: pointer; }
+  .export .menu button:hover { background: var(--accent-soft); }
   .summary { color: var(--muted); font-size: 13px; margin: 4px 0 14px; min-height: 20px; }
   .summary b { color: var(--ink); }
 
@@ -98,6 +106,10 @@
     </div>
     <input type="search" id="q" placeholder="Filter text, file, code…">
     <button class="btn" id="refresh">Refresh</button>
+    <details class="export" id="export">
+      <summary class="btn">Export ▾</summary>
+      <div class="menu"><button data-f="csv">CSV (Excel)</button><button data-f="json">JSON</button></div>
+    </details>
   </div>
   <div class="summary" id="summary"></div>
   <div id="list"></div>
@@ -143,11 +155,43 @@ function details(it) {
     ${frames ? `<div class="label">Stack trace</div><div class="frames">${frames}</div>` : ""}`;
 }
 
+// The errors currently on screen: the loaded range, narrowed by the filter box.
+function shown() {
+  const q = $("q").value.trim().toLowerCase();
+  return (st.data?.items || []).filter(it => !q || (it.note + " " + (it.code || "") + " " + it.frames.map(f => f.file + " " + f.fn).join(" ")).toLowerCase().includes(q));
+}
+
+function exportShown(format) {
+  const items = shown();
+  if (!items.length) return;
+  const rows = items.map(it => ({
+    time: new Date(it.ts).toISOString(),
+    code: it.code ?? "",
+    where: where(it),
+    message: it.note,
+    stacktrace: it.frames.map(f => `${f.file}:${f.line} ${f.fn}`).join("\n"),
+    data: Object.keys(it.extra || {}).length ? JSON.stringify(it.extra) : "",
+  }));
+  let body, type;
+  if (format === "json") {
+    body = JSON.stringify(rows, null, 2); type = "application/json";
+  } else {
+    const cell = v => /[",\n\r;]/.test(v) ? `"${String(v).replace(/"/g, '""')}"` : String(v);
+    const cols = Object.keys(rows[0]);
+    body = "\ufeff" + [cols.join(","), ...rows.map(r => cols.map(c => cell(r[c])).join(","))].join("\r\n");
+    type = "text/csv;charset=utf-8";
+  }
+  const name = `blor-errors-${st.data.range}${$("q").value.trim() ? "-filtered" : ""}-${new Date().toISOString().slice(0, 10)}.${format}`;
+  const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(new Blob([body], { type })), download: name });
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
 function render() {
   const d = st.data;
   if (!d) return;
   const q = $("q").value.trim().toLowerCase();
-  const items = d.items.filter(it => !q || (it.note + " " + (it.code || "") + " " + it.frames.map(f => f.file + " " + f.fn).join(" ")).toLowerCase().includes(q));
+  const items = shown();
   const label = RANGES.find(r => r[0] === d.range)[1];
   const more = d.matched > d.items.length ? ` · showing the newest ${d.items.length}` : "";
   $("summary").innerHTML = `<b>${d.matched}</b> error${d.matched === 1 ? "" : "s"} in the last ${label}${more}` +
@@ -257,6 +301,8 @@ $("ranges").onclick = e => { const r = e.target.dataset.r; if (!r) return; st.ra
 $("views").onclick = e => { const v = e.target.dataset.v; if (!v) return; st.view = v; localSet("view", v); renderControls(); render(); };
 $("q").oninput = render;
 $("refresh").onclick = () => load(true);
+$("export").onclick = e => { const f = e.target.dataset.f; if (!f) return; $("export").open = false; exportShown(f); };
+document.addEventListener("click", e => { if (!e.target.closest("#export")) $("export").open = false; });
 $("list").onclick = e => {
   if (e.target.closest("a, .body pre, .frames")) return;
   const head = e.target.closest(".head"); if (!head) return;
