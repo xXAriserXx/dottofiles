@@ -309,6 +309,7 @@ alias oporto="open http://test-01.otm.ai:9000/#!/1/docker/containers"
 alias opm='open "http://100.115.194.118:9000/#!/3/docker/dashboard"'
 alias oalias="open http://100.115.194.118:8092"   # this file's aliases/functions, served from the Mini (shortcuts-web/)
 alias okeys="open http://100.115.194.118:8093"   # AeroSpace/Karabiner keyboard view, served from the Mini (keyboard-web/)
+alias oberr="open http://100.115.194.118:8094"   # BLOR prod errors from CloudWatch, served from the Mini (blor-errors/)
 alias oq="open http://localhost:8079"   # OG-QR_Web local (docker compose)
 alias tb="open http://test-01.otm.ai:9000/#!/1/docker/containers"
 alias oclick="open https://app.clickup.com/2462893/time"
