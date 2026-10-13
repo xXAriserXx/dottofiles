@@ -257,6 +257,7 @@ alias aeroConf="nvim ~/Documents/dottofiles/aerospace.toml"
 alias op1='code -n /Users/jamesjames/Documents/work/projects/blor-fe'
 alias op2='code -n /Users/jamesjames/Documents/work/projects/old-blor/blor-fe'
 alias cl="claude"
+alias cls='cd ~ && claude --model sonnet'   # claude in home folder, Sonnet model
 alias cx="codex"
 alias ima="/Users/jrprecilla/Documents/work/projects/control/ima"
 # Gemini CLI: Daily Note
@@ -328,7 +329,7 @@ alias pass='dc && cd work && n pwd.json'
 alias pwds="n ~/Personal/Docs/greyrat-vault/pwds"
 alias 1p='command op'   # 1Password CLI (`op` is the file viewer function below)
 alias secret='say nandodemo'
-alias wsq='launchctl bootout "gui/$(id -u)/com.james.wsq" 2>/dev/null; launchctl bootstrap "gui/$(id -u)" ~/overlay/com.james.wsq.plist'   # random workspace prompt every minute, runs without a terminal
+alias wsq='launchctl bootout "gui/$(id -u)/com.james.wsq" 2>/dev/null; launchctl bootstrap "gui/$(id -u)" ~/overlay/com.james.wsq.plist'   # random workspace prompt every 30s (apps only, no letter), runs without a terminal
 alias wsqstop='launchctl bootout "gui/$(id -u)/com.james.wsq"; pkill -x overlay'   # stop it + hide any overlay
 
 # ============================================================
