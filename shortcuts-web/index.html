@@ -84,6 +84,20 @@
   .row.fn .cmd { font-style: italic; font-family: var(--sans); }
   .line { font: 11px var(--mono); color: var(--muted); opacity: .6; margin-left: 6px; }
   mark { background: var(--mark); color: inherit; border-radius: 2px; }
+  .row.unused .name, .row.unused .cmd { opacity: .55; }
+  .badge {
+    font: 500 10.5px var(--sans); color: var(--k-git); border: 1px solid currentColor; border-radius: 999px;
+    padding: 0 6px; margin-left: 4px; white-space: nowrap; letter-spacing: .02em;
+  }
+  .toggle {
+    font: 12.5px var(--sans); color: var(--muted); background: var(--panel); cursor: pointer;
+    border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px;
+  }
+  .uses { font: 500 11px var(--sans); color: var(--muted); margin-left: 4px; white-space: nowrap; }
+  .where { font: 11px var(--sans); color: var(--muted); opacity: .8; margin-left: 6px; }
+  .toggle:hover { color: var(--ink); border-color: var(--muted); }
+  .toggle.on { color: var(--k-git); border-color: var(--k-git); }
+  #rankBtn.on { color: var(--accent); border-color: var(--accent); }
   .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); padding: 6px 0 0; }
   .legend i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; }
   .empty, .error { text-align: center; color: var(--muted); padding: 50px 0; }
@@ -102,6 +116,8 @@
     <div class="top">
       <h1><span>&gt;_</span> shortcuts</h1>
       <div class="stats" id="stats">loading…</div>
+      <button class="toggle" id="rankBtn" type="button" hidden title="Rank every shortcut by how often it appears in this laptop's shell history">most used first</button>
+      <button class="toggle" id="unusedBtn" type="button" hidden title="Show only shortcuts never found in this laptop's shell history"></button>
     </div>
     <div class="search">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
@@ -116,6 +132,7 @@
       <span><i style="background:var(--k-git)"></i>git</span>
       <span><i style="background:var(--k-cmd)"></i>command</span>
       <span><i style="background:var(--k-fn)"></i>function</span>
+      <span id="unusedLegend" hidden><span class="badge">never used</span> not found in shell history</span>
     </div>
   </div>
 </header>
@@ -126,6 +143,23 @@ const $ = s => document.querySelector(s);
 const esc = s => s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 let data = null;
+let onlyUnused = false, rankByUse = false;
+const usesOf = it => { const c = counts(); return c && it.name in c ? c[it.name] : 0; };
+const rowHtml = (it, terms, extra = "") => {
+  const fn = it.type === "function";
+  const k = fn ? "fn" : it.kind;
+  const cmd = fn ? (it.note ? "" : "function") : hlHtml(linkify(esc(it.value), it.urls), terms);
+  const unused = isUnused(it), n = usesOf(it);
+  const tag = unused ? '<span class="badge">never used</span>' : (counts() ? `<span class="uses">${n.toLocaleString()}×</span>` : "");
+  return `<div class="row${fn ? " fn" : ""}${unused ? " unused" : ""}">
+        <button class="name" style="--k:var(--k-${k})" data-copy="${esc(it.name)}" title="Copy">${hl(it.name, terms)}${tag}</button>
+        <div class="body">
+          ${cmd ? `<div class="cmd">${cmd}<span class="line">:${it.line}</span>${extra}</div>` : ""}
+          ${it.note ? `<div class="desc">${hl(it.note, terms)}${fn ? `<span class="line">:${it.line}</span>${extra}` : ""}</div>` : ""}
+        </div></div>`;
+};
+const counts = () => (data && data.usage && data.usage.counts) || null;
+const isUnused = it => { const c = counts(); return !!c && it.name in c && c[it.name] === 0; };
 
 function hl(text, terms) { return hlHtml(esc(text), terms); }
 
@@ -148,25 +182,26 @@ function linkify(html, urls) {
 function render() {
   if (!data) return;
   const terms = $("#q").value.trim().toLowerCase().split(/\s+/).filter(Boolean);
-  const matches = it => !terms.length || terms.every(t =>
-    [it.name, it.value || "", it.note || ""].some(f => f.toLowerCase().includes(t)));
+  const matches = it => (!onlyUnused || isUnused(it)) && (!terms.length || terms.every(t =>
+    [it.name, it.value || "", it.note || ""].some(f => f.toLowerCase().includes(t))));
   let html = "", chips = "", shown = 0;
 
-  for (const sec of data.sections) {
+  if (rankByUse && counts()) {
+    const all = [];
+    for (const sec of data.sections)
+      for (const it of sec.items) if (it.type !== "note" && matches(it)) all.push([it, sec.title]);
+    all.sort((a, b) => usesOf(b[0]) - usesOf(a[0]) || a[0].name.localeCompare(b[0].name));
+    shown = all.length;
+    html = `<section><h2>Most used first</h2><div class="card">${
+      all.map(([it, title]) => rowHtml(it, terms, `<span class="where">${esc(title)}</span>`)).join("")}</div></section>`;
+  }
+  for (const sec of rankByUse && counts() ? [] : data.sections) {
     let rows = "", pendingNote = "", n = 0;
     for (const it of sec.items) {
       if (it.type === "note") { pendingNote = it.text; continue; }
       if (!matches(it)) continue;
       if (pendingNote) { rows += `<div class="note">${esc(pendingNote)}</div>`; pendingNote = ""; }
-      const fn = it.type === "function";
-      const k = fn ? "fn" : it.kind;
-      const cmd = fn ? (it.note ? "" : "function") : hlHtml(linkify(esc(it.value), it.urls), terms);
-      rows += `<div class="row${fn ? " fn" : ""}">
-        <button class="name" style="--k:var(--k-${k})" data-copy="${esc(it.name)}" title="Copy">${hl(it.name, terms)}</button>
-        <div class="body">
-          ${cmd ? `<div class="cmd">${cmd}<span class="line">:${it.line}</span></div>` : ""}
-          ${it.note ? `<div class="desc">${hl(it.note, terms)}${fn ? `<span class="line">:${it.line}</span>` : ""}</div>` : ""}
-        </div></div>`;
+      rows += rowHtml(it, terms);
       n++;
     }
     if (!n) continue;
@@ -178,9 +213,17 @@ function render() {
   $("#list").innerHTML = html || `<div class="empty">No shortcut matches “${esc($("#q").value)}”</div>`;
   $("#chips").innerHTML = chips;
   const total = data.aliases + data.functions;
-  $("#stats").textContent = terms.length
+  const c = counts();
+  const nUnused = c ? data.sections.reduce((a, sec) => a + sec.items.filter(it => it.type !== "note" && isUnused(it)).length, 0) : 0;
+  $("#stats").textContent = terms.length || onlyUnused
     ? `${shown} of ${total} match`
-    : `${data.aliases} aliases · ${data.functions} functions`;
+    : `${data.aliases} aliases · ${data.functions} functions` + (c ? ` · ${nUnused} never used` : "");
+  $("#unusedBtn").hidden = !c;
+  $("#rankBtn").hidden = !c;
+  $("#rankBtn").classList.toggle("on", rankByUse);
+  $("#unusedLegend").hidden = !c;
+  $("#unusedBtn").classList.toggle("on", onlyUnused);
+  $("#unusedBtn").textContent = `never used · ${nUnused}`;
 }
 
 async function load() {
@@ -190,7 +233,10 @@ async function load() {
     data = await r.json();
     if (data.error) throw new Error(data.error);
     render();
+    const u = data.usage;
     $("#foot").innerHTML = "zshrc updated " + esc(new Date(data.updated * 1000).toLocaleString()) +
+      (u ? ` · history of ${u.commands.toLocaleString()} commands checked ${esc(new Date(u.generated * 1000).toLocaleString())}`
+         : " · no history data yet") +
       ' · <a href="/logout">logout</a>';
   } catch (e) {
     $("#list").innerHTML = `<div class="error">Couldn't load shortcuts: ${esc(String(e.message || e))}</div>`;
@@ -198,6 +244,8 @@ async function load() {
   }
 }
 
+$("#rankBtn").addEventListener("click", () => { rankByUse = !rankByUse; render(); window.scrollTo(0, 0); });
+$("#unusedBtn").addEventListener("click", () => { onlyUnused = !onlyUnused; render(); window.scrollTo(0, 0); });
 $("#q").addEventListener("input", () => { render(); window.scrollTo(0, 0); });
 document.addEventListener("keydown", e => {
   if (e.key === "/" && document.activeElement !== $("#q")) { e.preventDefault(); $("#q").focus(); $("#q").select(); }

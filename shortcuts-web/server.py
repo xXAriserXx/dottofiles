@@ -12,6 +12,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 HERE  = os.path.dirname(os.path.abspath(__file__))
 ZSHRC = os.environ.get("ZSHRC", "/data/zshrc")
+USAGE = os.environ.get("USAGE", "/data/usage.json")   # pushed by usage.py (laptop history counts)
 HOST  = os.environ.get("SHORTCUTS_HOST", "0.0.0.0")
 PORT  = int(os.environ.get("SHORTCUTS_PORT", "8092"))
 PASSWORD = os.environ.get("SHORTCUTS_PASSWORD", "")
@@ -127,13 +128,22 @@ def parse(text):
             out.append({"title": sec["title"], "items": items})
     return out
 
+def load_usage():
+    """Counts per name from the laptop's shell history, or None if not pushed yet."""
+    try:
+        with open(USAGE, encoding="utf-8") as f:
+            u = json.load(f)
+        return {"counts": u["counts"], "commands": u.get("commands", 0), "generated": u.get("generated", 0)}
+    except (OSError, ValueError, KeyError):
+        return None
+
 def payload():
     text, mtime = load_zshrc()
     sections = parse(text)
     count = lambda t: sum(1 for s in sections for it in s["items"] if it["type"] == t)
     return {
         "sections": sections, "aliases": count("alias"), "functions": count("function"),
-        "updated": int(mtime),
+        "updated": int(mtime), "usage": load_usage(),
     }
 
 PAGE  = open(os.path.join(HERE, "index.html"), "rb").read()

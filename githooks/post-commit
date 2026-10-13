@@ -6,3 +6,5 @@
 dest=shortcuts-web/data
 (git show HEAD:zshrc | ssh -o ConnectTimeout=5 -o BatchMode=yes minish \
   "mkdir -p $dest && cat > $dest/.zshrc.tmp && mv $dest/.zshrc.tmp $dest/zshrc") >/dev/null 2>&1 &
+# Also refresh the "never used" flags (counts from this laptop's shell history).
+(sh shortcuts-web/push-usage.sh) >/dev/null 2>&1 &
