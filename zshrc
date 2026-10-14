@@ -258,6 +258,7 @@ alias op1='code -n /Users/jamesjames/Documents/work/projects/blor-fe'
 alias op2='code -n /Users/jamesjames/Documents/work/projects/old-blor/blor-fe'
 alias cl="claude"
 alias cls='cd ~ && claude --model sonnet'   # claude in home folder, Sonnet model
+alias clh='cd ~ && claude --model haiku'   # claude in home folder, Haiku model
 alias cx="codex"
 alias ima="/Users/jrprecilla/Documents/work/projects/control/ima"
 # Gemini CLI: Daily Note
