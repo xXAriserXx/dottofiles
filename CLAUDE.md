@@ -33,6 +33,8 @@ There are two different Karabiner configs for two different machines. Symlink th
 - `karabiner/karabiner-apple.json` — for the machine with an Apple Magic Keyboard (vendor 1452, product 641). Has a device-specific rule swapping `left_command` → `left_option`.
 - `karabiner/karabiner-other.json` — for the other machine, no device-specific overrides.
 
+The left Option + J/K/L/; → arrow rules have a `variable_unless whitewindow_movement = 1` condition: WhiteWindow (`~/Personal/Projects/withoutMouse`) sets that variable while its Movement Mode is open, so Option + JKL reaches it for dragging.
+
 To set up on a new machine: `ln -sf ~/Documents/dottofiles/karabiner/karabiner-<machine>.json ~/.config/karabiner/karabiner.json`
 
 Karabiner does not notice edits to the symlinked file. After editing, reload it: `launchctl kickstart -k gui/$(id -u)/org.pqrs.service.agent.Karabiner-Console-User-Server` (check `~/.local/share/karabiner/log/console_user_server.log` for a new "Load ..." line).

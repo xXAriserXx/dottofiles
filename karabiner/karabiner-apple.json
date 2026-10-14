@@ -499,6 +499,7 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [{ "type": "variable_unless", "name": "whitewindow_movement", "value": 1 }],
                                 "from": {
                                     "key_code": "j",
                                     "modifiers": {
@@ -510,6 +511,7 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [{ "type": "variable_unless", "name": "whitewindow_movement", "value": 1 }],
                                 "from": {
                                     "key_code": "k",
                                     "modifiers": {
@@ -521,6 +523,7 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [{ "type": "variable_unless", "name": "whitewindow_movement", "value": 1 }],
                                 "from": {
                                     "key_code": "l",
                                     "modifiers": {
@@ -532,6 +535,7 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [{ "type": "variable_unless", "name": "whitewindow_movement", "value": 1 }],
                                 "from": {
                                     "key_code": "semicolon",
                                     "modifiers": {
@@ -1108,6 +1112,7 @@
                         "enabled": false,
                         "manipulators": [
                             {
+                                "conditions": [{ "type": "variable_unless", "name": "whitewindow_movement", "value": 1 }],
                                 "from": {
                                     "key_code": "j",
                                     "modifiers": {
@@ -1119,6 +1124,7 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [{ "type": "variable_unless", "name": "whitewindow_movement", "value": 1 }],
                                 "from": {
                                     "key_code": "k",
                                     "modifiers": {
@@ -1130,6 +1136,7 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [{ "type": "variable_unless", "name": "whitewindow_movement", "value": 1 }],
                                 "from": {
                                     "key_code": "l",
                                     "modifiers": {
@@ -1141,6 +1148,7 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [{ "type": "variable_unless", "name": "whitewindow_movement", "value": 1 }],
                                 "from": {
                                     "key_code": "semicolon",
                                     "modifiers": {
@@ -1200,6 +1208,7 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [{ "type": "variable_unless", "name": "whitewindow_movement", "value": 1 }],
                                 "from": {
                                     "key_code": "k",
                                     "modifiers": {
@@ -1211,6 +1220,7 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [{ "type": "variable_unless", "name": "whitewindow_movement", "value": 1 }],
                                 "from": {
                                     "key_code": "l",
                                     "modifiers": {
@@ -1222,6 +1232,7 @@
                                 "type": "basic"
                             },
                             {
+                                "conditions": [{ "type": "variable_unless", "name": "whitewindow_movement", "value": 1 }],
                                 "from": {
                                     "key_code": "semicolon",
                                     "modifiers": {
