@@ -298,7 +298,7 @@ alias ohostad="open https://unistack-dev.unidata.it/admin/"
 alias edit='open "https://unistack-dev.unidata.it/admin/?cmd=theme_config&action=config&id=1"'
 alias uni='open "https://unistack-dev.unidata.it/admin/index.php?cmd=unidata"'
 alias ouni=uni   # old name
-alias omap='open "https://unistack-dev.unidata.it/admin/index.php?cmd=unidata&view=mappings"'
+alias unm='open "https://unistack-dev.unidata.it/admin/index.php?cmd=unidata&view=mappings"'
 alias omyfe="open https://git.uniot.eu/ottimis/myunidata-fe"
 alias omybe="open https://git.uniot.eu/ottimis/myunidata-be"
 alias obblor="open https://github.com/ottimis/Blorcompany.com"
