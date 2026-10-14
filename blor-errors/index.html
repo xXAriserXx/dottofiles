@@ -60,6 +60,11 @@
   .count { font: 600 13px var(--mono); color: var(--accent); background: var(--accent-soft); border-radius: 7px;
            padding: 2px 8px; min-width: 38px; text-align: center; }
   .time { font: 12px var(--mono); color: var(--muted); white-space: nowrap; }
+  .side { display: flex; gap: 8px; align-items: center; }
+  .copy { border: 1px solid var(--line); background: none; color: var(--muted); border-radius: 7px;
+          padding: 1px 8px; font: 12px var(--mono); cursor: pointer; }
+  .copy:hover { border-color: var(--accent); color: var(--ink); }
+  .copy.done { color: var(--ok); border-color: var(--ok); }
   .note { font: 13px/1.45 var(--mono); word-break: break-word; display: -webkit-box; -webkit-line-clamp: 3;
           -webkit-box-orient: vertical; overflow: hidden; }
   .open > .head .note { -webkit-line-clamp: unset; }
@@ -84,7 +89,7 @@
   .err { color: var(--accent); }
   @media (max-width: 600px) {
     .head { grid-template-columns: auto 1fr; }
-    .head .time { grid-column: 2; }
+    .head .side { grid-column: 2; }
   }
 </style>
 </head>
@@ -155,6 +160,37 @@ function details(it) {
     ${frames ? `<div class="label">Stack trace</div><div class="frames">${frames}</div>` : ""}`;
 }
 
+// Markdown for one error (or a group: latest occurrence plus count and time span), to paste into a ticket or an LLM.
+function toMarkdown(it, list) {
+  const iso = ts => new Date(ts).toISOString();
+  const fence = t => "```\n" + t + "\n```";
+  const out = [`# ${headline(it.note)}`, ""];
+  out.push(list && list.length > 1
+    ? `- **Occurrences:** ${list.length} (${iso(list[list.length - 1].ts)} → ${iso(list[0].ts)}), latest below`
+    : `- **Time:** ${iso(it.ts)}`);
+  if (it.code) out.push(`- **Code:** ${it.code}`);
+  if (where(it)) out.push(`- **Where:** \`${where(it)}\``);
+  out.push(`- **Source:** BLOR prod · ${$("group").textContent.replace(/^prod · /, "")}`, "", "## Message", "", fence(it.note));
+  if (Object.keys(it.extra || {}).length) out.push("", "## Data", "", fence(JSON.stringify(it.extra, null, 2)));
+  if (it.frames.length) out.push("", "## Stack trace", "", fence(it.frames.map(f => `${f.file}:${f.line} ${f.fn}`).join("\n")));
+  return out.join("\n") + "\n";
+}
+
+// The page is served over plain http (Tailscale IP), where navigator.clipboard is unavailable: fall back to execCommand.
+async function copyText(text) {
+  try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); return true; } } catch {}
+  const t = Object.assign(document.createElement("textarea"), { value: text });
+  t.style.cssText = "position:fixed;opacity:0";
+  document.body.appendChild(t); t.select();
+  let ok = false;
+  try { ok = document.execCommand("copy"); } catch {}
+  t.remove();
+  return ok;
+}
+
+let copyRefs = [];   // filled by render(): what each copy button copies
+const copyBtn = (it, list) => `<button class="copy" data-c="${copyRefs.push([it, list]) - 1}" title="Copy as Markdown">Copy</button>`;
+
 // The errors currently on screen: the loaded range, narrowed by the filter box.
 function shown() {
   const q = $("q").value.trim().toLowerCase();
@@ -192,6 +228,7 @@ function render() {
   if (!d) return;
   const q = $("q").value.trim().toLowerCase();
   const items = shown();
+  copyRefs = [];
   const label = RANGES.find(r => r[0] === d.range)[1];
   const more = d.matched > d.items.length ? ` · showing the newest ${d.items.length}` : "";
   $("summary").innerHTML = `<b>${d.matched}</b> error${d.matched === 1 ? "" : "s"} in the last ${label}${more}` +
@@ -209,7 +246,7 @@ function render() {
       return `<div class="card ${st.open.has(id) ? "open" : ""}" data-id="${id}">
         <div class="head"><span class="count">1</span>
           <div><div class="note">${esc(it.note)}</div><div class="where">${esc(where(it))}</div></div>
-          <span class="time" title="${esc(new Date(it.ts).toString())}">${fmt(it.ts)}</span></div>
+          <span class="side"><span class="time" title="${esc(new Date(it.ts).toString())}">${fmt(it.ts)}</span>${copyBtn(it)}</span></div>
         <div class="body">${st.open.has(id) ? details(it) : ""}</div></div>`;
     }).join("");
     return;
@@ -226,13 +263,13 @@ function render() {
     const body = !st.open.has(id) ? "" : list.slice(0, 50).map((it, i) => {
       const oid = id + "|" + it.ts + i;
       return `<div class="occ card ${st.open.has(oid) ? "open" : ""}" data-id="${esc(oid)}" style="border:0;margin:0;border-radius:0;border-left:2px solid var(--line)">
-        <div class="head"><div class="note">${esc(it.note)}</div><span class="time">${fmt(it.ts)}</span></div>
+        <div class="head"><div class="note">${esc(it.note)}</div><span class="side"><span class="time">${fmt(it.ts)}</span>${copyBtn(it)}</span></div>
         <div class="body" style="border:0;padding:6px 0 0">${st.open.has(oid) ? details(it) : ""}</div></div>`;
     }).join("") + (list.length > 50 ? `<p class="sub">…and ${list.length - 50} more (use “All”)</p>` : "");
     return `<div class="card ${st.open.has(id) ? "open" : ""}" data-id="${esc(id)}">
       <div class="head"><span class="count">${list.length}×</span>
         <div><div class="note">${esc(headline(last.note))}</div><div class="where">${esc(where(last))}</div></div>
-        <span class="time" title="${esc(span)}">${ago(last.ts)}</span></div>
+        <span class="side"><span class="time" title="${esc(span)}">${ago(last.ts)}</span>${copyBtn(last, list)}</span></div>
       <div class="body">${body}</div></div>`;
   }).join("");
 }
@@ -303,7 +340,15 @@ $("q").oninput = render;
 $("refresh").onclick = () => load(true);
 $("export").onclick = e => { const f = e.target.dataset.f; if (!f) return; $("export").open = false; exportShown(f); };
 document.addEventListener("click", e => { if (!e.target.closest("#export")) $("export").open = false; });
-$("list").onclick = e => {
+$("list").onclick = async e => {
+  const cp = e.target.closest(".copy");
+  if (cp) {
+    const [it, list] = copyRefs[cp.dataset.c];
+    const ok = await copyText(toMarkdown(it, list));
+    cp.textContent = ok ? "Copied" : "Failed"; cp.classList.toggle("done", ok);
+    setTimeout(() => { cp.textContent = "Copy"; cp.classList.remove("done"); }, 1500);
+    return;
+  }
   if (e.target.closest("a, .body pre, .frames")) return;
   const head = e.target.closest(".head"); if (!head) return;
   const card = head.parentElement, id = card.dataset.id;
