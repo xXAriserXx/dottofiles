@@ -36,6 +36,10 @@ default-root-container-orientation = 'auto'
 # Fallback value (if you omit the key): on-focused-monitor-changed = []
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
+# Tell WhiteWindow (keyboard mouse tool) a workspace switch happened, so it
+# closes Movement Mode: AeroSpace workspaces are not macOS Spaces.
+exec-on-workspace-change = ['/usr/bin/notifyutil', '-p', 'com.james.whitewindow.workspace-changed']
+
 # You can effectively turn off macOS "Hide application" (cmd-h) feature by toggling this flag
 # Useful if you don't use this macOS feature, but accidentally hit cmd-h or cmd-alt-h key
 # Also see: https://nikitabobko.github.io/AeroSpace/goodies#disable-hide-app
