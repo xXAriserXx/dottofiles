@@ -65,7 +65,7 @@ for src,mode in (('aero','main'),('svc','service')):
     for spec,cmd in aero['mode'][mode]['binding'].items():
         ms,key=parse(spec); c=cmd if isinstance(cmd,str) else ' ; '.join(cmd)
         E.append(dict(src=src,mods=ms,key=key,short=ashort(c if isinstance(cmd,str) else cmd[0]),full=c,rule='AeroSpace '+mode+' mode',cond=False))
-apps=[[(lambda i:i)(w['if']['app-id']),' ; '.join(w['run']) if isinstance(w['run'],list) else w['run']] for w in aero['on-window-detected']]
+apps=[[(w['if'].get('app-id') or w['if'].get('app-name-regex-substring')),' ; '.join(w['run']) if isinstance(w['run'],list) else w['run']] for w in aero['on-window-detected']]
 import base64,re
 NAMES={'com.apple.Preview':'Preview','org.mozilla.nightlyunofficial':'Firefox Nightly','org.mozilla.firefoxdeveloperedition':'Firefox Dev Edition','com.apple.mail':'Mail','com.navicat.NavicatPremium':'Navicat','com.github.wez.wezterm':'WezTerm','com.microsoft.teams2':'Teams','app.freelens.Freelens':'Freelens','com.usebruno.app':'Bruno','com.apple.finder':'Finder','com.microsoft.VSCode':'VS Code','org.openvpn.client.app':'OpenVPN','com.1password.1password':'1Password'}
 def icon(i):
@@ -75,7 +75,7 @@ wsapps={}
 for w in aero['on-window-detected']:
     run=w['run'] if isinstance(w['run'],str) else ' '.join(w['run'])
     m=re.match(r'move-node-to-workspace (\w+)',run)
-    i=w['if']['app-id']
+    i=w['if'].get('app-id') or w['if'].get('app-name-regex-substring')
     if m: wsapps.setdefault(m.group(1).lower(),[]).append(dict(id=i,name=NAMES.get(i,i),icon=icon(i)))
     else: apps_float=1
 raw={'aerospace.toml':open('../aerospace.toml').read(),'karabiner.json':open('../karabiner/karabiner-apple.json').read()}
