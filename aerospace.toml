@@ -228,6 +228,11 @@ on-mode-changed = []
     if.app-id = 'com.apple.Preview'
     run = ['move-node-to-workspace S', 'layout floating', 'exec-and-forget ~/Documents/dottofiles/aerospace-fullwidth.js Preview']
 
+# Clipboard History (~/Documents/cliphist) floats, docked on the right by the app itself.
+[[on-window-detected]]
+    if.app-name-regex-substring = 'cliphist'
+    run = 'layout floating'
+
 # Send apps to their workspace when they open a window.
 [[on-window-detected]]
     if.app-id = 'com.1password.1password'
