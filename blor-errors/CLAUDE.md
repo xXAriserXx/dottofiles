@@ -1,6 +1,6 @@
 # blor-errors
 
-Password-protected web page listing the BLOR **production errors** stored in AWS CloudWatch. Opened from the laptop with the `oberr` alias (`zshrc`). Runs as a Docker container on the Mac mini at http://100.115.194.118:8094 (Tailscale only), deployed in `~/blor-errors` there. This folder is the source of truth; edit here, never on the Mini.
+Password-protected web page listing the BLOR **production errors** stored in AWS CloudWatch. Opened from the laptop with the `ber` alias (`zshrc`). Runs as a Docker container on the Mac mini at http://100.115.194.118:8094 (Tailscale only), deployed in `~/blor-errors` there. This folder is the source of truth; edit here, never on the Mini.
 
 ## Files
 
@@ -54,4 +54,4 @@ Defaults for the SSO values are in `server.py`; every setting can be overridden 
 
 - Reachable only over Tailscale; the port is bound to `100.115.194.118`, not `0.0.0.0` on the host.
 - Port 8094. Siblings on the Mini: `shortcuts-web` 8092, `keyboard-web` 8093.
-- No tests; check a change by deploying and opening `oberr`. Python logs go to `docker logs blor-errors` (request logging is disabled).
+- No tests; check a change by deploying and opening `ber`. Python logs go to `docker logs blor-errors` (request logging is disabled).

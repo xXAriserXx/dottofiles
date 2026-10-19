@@ -314,7 +314,10 @@ alias ali="open http://100.115.194.118:8092"   # this file's aliases/functions, 
 alias oalias=ali   # old name
 alias kbd="open http://100.115.194.118:8093"   # AeroSpace/Karabiner keyboard view, served from the Mini (keyboard-web/)
 alias okeys=kbd   # old name
-alias oberr="open http://100.115.194.118:8094"   # BLOR prod errors from CloudWatch, served from the Mini (blor-errors/)
+alias anal='open "https://analytics.google.com/analytics/web/?authuser=4#/a89123432p399578620/reports/intelligenthome"'   # Blor GA4 home
+alias meta='open "https://business.facebook.com/latest/business_home?business_id=877574692394692"'   # Blor Meta Business home
+alias ogl="open https://ottimis-group.ticket.oglut.com/"   # Ottimis Group ticketing (oglut)
+alias ber="open http://100.115.194.118:8094"   # BLOR prod errors from CloudWatch, served from the Mini (blor-errors/)
 alias wwg="open http://100.115.194.118:8095"   # WhiteWindow practice game, served from the Mini (withoutMouse/game_server.py)
 alias oq="open http://localhost:8079"   # OG-QR_Web local (docker compose)
 alias tb="open http://test-01.otm.ai:9000/#!/1/docker/containers"
