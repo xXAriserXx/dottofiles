@@ -16,6 +16,8 @@ export EDITOR="nvim"
 export AWS_PROFILE="jp"
 alias awsl="aws sso login --profile jp"   # one login covers both profiles: jp (JPDev) and blorteam (BlorTeam)
 export DYLD_LIBRARY_PATH="/opt/homebrew/opt/expat/lib"
+bindkey "^[[1;3D" backward-word   # Option+Left: jump one word back
+bindkey "^[[1;3C" forward-word    # Option+Right: jump one word forward
 
 HISTSIZE=1000000
 SAVEHIST=1000000
@@ -109,21 +111,18 @@ alias zan="cd ~/Personal/Projects/zanoba"
 # ============================================================
 # Blor
 alias blor="cd ~/Work/Projects/blor"
-alias Blor="cd ~/Work/Projects/blor/prod/blor-fe"
-alias bblor="cd ~/Work/Projects/blor/prod/Blorcompany.com"
-alias blorev="cd ~/Work/Projects/blor/prod/B-Revolution"
-alias blorapp="cd ~/Work/Projects/blor/prod/BlorApp"
+alias Blor="cd ~/Work/Projects/blor/blor-fe"
+alias bblor="cd ~/Work/Projects/blor/Blorcompany.com"
+alias blorev="cd ~/Work/Projects/blor/B-Revolution"
 alias rel="gck staging && gmg crm-release && gps && gck crm-release"
-alias bdev="cd ~/Work/Projects/blor/dev"
-alias bprod="cd ~/Work/Projects/blor/prod && clear"
+alias bprod="cd ~/Work/Projects/blor && clear"
 alias br="bprod && cd B-Revolution && clear"
 alias bb="bprod && cd Blorcompany.com && clear"
 alias bf="bprod && cd blor-fe && clear"
-alias bexp="cd ~/Work/Projects/blor/experimental"
 alias ship="gck main && gmg crm-release && gps && gck staging && gmg main && gps && gck crm-release"
 alias shipblor="br && ship && bb && ship"
-alias xray="cd ~/Work/Projects/blor/prod/Blorcompany.com && php tools/codebase-analyzer.php && python3 tools/_build_xray.py && open tools/codebase-xray.html"
-alias oxray="open ~/Work/Projects/blor/prod/Blorcompany.com/tools/codebase-xray.html"
+alias xray="cd ~/Work/Projects/blor/Blorcompany.com && php tools/codebase-analyzer.php && python3 tools/_build_xray.py && open tools/codebase-xray.html"
+alias oxray="open ~/Work/Projects/blor/Blorcompany.com/tools/codebase-xray.html"
 
 # Unidata
 alias myfee="cd ~/Work/Projects/unidata/myunidata-fe"
@@ -179,9 +178,9 @@ alias open_docker='cd && open -a Docker Desktop'
 alias dcu="docker compose up"
 alias dup='open -a Docker; (while ! docker info >/dev/null 2>&1; do sleep 1; done; docker-compose up) & source ~/.zshrc'
 alias doc='sigma && docker run -p 3000:3000 blor-fe'
-# Blor stack via the root prod/ docker-compose.yaml. Each frontend's
+# Blor stack via the root blor/ docker-compose.yaml. Each frontend's
 # depends_on pulls the whole backend (web + mariadb + redis), so naming
-# just the frontend is enough. bprod cds into prod/ where the compose lives.
+# just the frontend is enough. bprod cds into blor/ where the compose lives.
 alias d="bprod && docker compose up"                     # everything
 alias dfe="bprod && docker compose up blor-fe"           # storefront + backend
 alias drev="bprod && docker compose up b-revolution"     # admin + backend
@@ -209,7 +208,7 @@ alias kbgn="kubectl get namespaces"
 alias kbgp="kubectl get pods"
 alias kbblor="kubectl get pods -n blor"
 alias kbbfe="kubectl exec -it blor-fe-5d58567b46-knbrr -n blor -- /bin/bash"
-alias temporary="kubectl cp ~/Work/Projects/blor/prod/Blorcompany.com/src/app/vendor/ottimis/phplibs/src/dataBase.php blor/blor-be-6fcd79c89c-xvrrp:/var/www/html/app/vendor/ottimis/phplibs/src/dataBase.php"
+alias temporary="kubectl cp ~/Work/Projects/blor/Blorcompany.com/src/app/vendor/ottimis/phplibs/src/dataBase.php blor/blor-be-6fcd79c89c-xvrrp:/var/www/html/app/vendor/ottimis/phplibs/src/dataBase.php"
 
 # ============================================================
 # Git & GitHub
@@ -238,7 +237,7 @@ alias grm="git remote -v"
 alias gdiff="git diff --cached HEAD > diff.txt"
 alias pull_branches='git remote update origin --prune'
 alias ghls="gh repo list"
-alias cloneblor='cd ~/Work/Projects && if [ ! -d blor ]; then mkdir -p blor/dev blor/prod && for dir in blor/dev blor/prod; do cd ~/Work/Projects/$dir && git clone git@github.com:ottimis/blor-fe.git && git clone git@github.com:ottimis/Blorcompany.com.git && git clone git@github.com:ottimis/B-Revolution.git; done && echo "Successfully cloned all repositories."; else echo "Folder blor already exists. Stopping."; fi'
+alias cloneblor='cd ~/Work/Projects && if [ ! -d blor ]; then mkdir -p blor && cd ~/Work/Projects/blor && git clone git@github.com:ottimis/blor-fe.git && git clone git@github.com:ottimis/Blorcompany.com.git && git clone git@github.com:ottimis/B-Revolution.git && echo "Successfully cloned all repositories."; else echo "Folder blor already exists. Stopping."; fi'
 
 # ============================================================
 # tmux
@@ -373,6 +372,8 @@ op() {
     extension="${file##*.}"
     case "${extension:l}" in
       pdf) tdf -m 1 -- "$file" || return ;;
+      md) mdr "$file" || return ;;
+      html|htm) open -a "Google Chrome" "$file" || return ;;
       png|svg|webp|jpg|jpeg) chafa -- "$file" || return ;;
       mp4|mkv)
         if [[ "$TERM_PROGRAM" == WezTerm || "$TERM" == xterm-kitty ]]; then
@@ -471,7 +472,7 @@ gps() {
 #   bs / status  — tunnel state + local/mini container counts
 bstack() {
   local mini="james@100.115.194.118"
-  local compose=~/Work/Projects/blor/prod/docker-compose.yaml
+  local compose=~/Work/Projects/blor/docker-compose.yaml
   local full_tunnel="ssh -f -N -L 4200:localhost:4200 -L 4001:localhost:4001 -L 3309:localhost:3309 -L 3000:localhost:3000"
   case "$1" in
     local)
