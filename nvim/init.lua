@@ -2,6 +2,11 @@ vim.g.mapleader = " "
 
 vim.opt.number = true
 vim.opt.numberwidth = 3
+-- Toggle line numbers together with the ~ marks after the end of the file
+vim.keymap.set("n", "<leader>n", function()
+  vim.wo.number = not vim.wo.number
+  vim.opt_local.fillchars:append({ eob = vim.wo.number and "~" or " " })
+end, { desc = "Toggle line numbers and end-of-file tildes" })
 vim.opt.signcolumn = "yes:1"
 vim.opt.cursorline = true
 vim.opt.cmdheight = 0
@@ -37,7 +42,7 @@ if vim.uv.fs_stat(lazypath) then
       priority = 1000,
       config = function()
         require("catppuccin").setup({
-          flavour = "frappe",
+          flavour = "latte",
           transparent_background = true,
         })
 
