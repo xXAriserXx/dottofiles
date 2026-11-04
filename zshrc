@@ -199,8 +199,8 @@ alias bx="bstack down"     # take down all containers on the mini
 # Zeus
 alias start_zeus_old='root && docker start zeus20-php-web-1'
 alias start_zeus_all='root && docker start zeus-be-web-1 && zeus_fe && ns'
-alias launch_ng="root && open -a 'Firefox Developer Edition' 'www.localhost:4200'"
-alias launch_ionic="root && open -a 'Firefox Developer Edition' 'www.localhost:8100'"
+alias launch_ng="root && open -a 'Google Chrome' 'www.localhost:4200'"
+alias launch_ionic="root && open -a 'Google Chrome' 'www.localhost:8100'"
 
 # ============================================================
 # Kubernetes
@@ -304,7 +304,7 @@ alias omybe="open https://git.uniot.eu/ottimis/myunidata-be"
 alias obblor="open https://github.com/ottimis/Blorcompany.com"
 alias oblor="open https://github.com/ottimis/blor-fe"
 alias orev="open https://github.com/ottimis/B-Revolution"
-alias gha="open https://github.com/ottimis/B-Revolution/actions https://github.com/ottimis/Blorcompany.com/actions"
+alias gha="open https://github.com/ottimis/B-Revolution/actions https://github.com/ottimis/Blorcompany.com/actions https://github.com/ottimis/blor-fe/actions"
 alias action=gha   # old name
 alias oportb="open https://docker.blorcompany.com/#!/2/docker/containers"
 alias oportu="open https://portainer.unidata.it/#!/home"
@@ -315,17 +315,26 @@ alias ali="open http://100.115.194.118:8092"   # this file's aliases/functions, 
 alias oalias=ali   # old name
 alias kbd="open http://100.115.194.118:8093"   # AeroSpace/Karabiner keyboard view, served from the Mini (keyboard-web/)
 alias okeys=kbd   # old name
+alias vnc="open vnc://james@100.115.194.118"   # Screen Sharing to the Mini (Spotlight: vnc.app)
+alias json="open http://100.115.194.118:8888/json-prettify"   # IT-Tools JSON viewer, served from the Mini (~/docker/it-tools)
 alias anal='open "https://analytics.google.com/analytics/web/?authuser=4#/a89123432p399578620/reports/intelligenthome"'   # Blor GA4 home
 alias meta='open "https://business.facebook.com/latest/business_home?business_id=877574692394692"'   # Blor Meta Business home
 alias ogl="open https://ottimis-group.ticket.oglut.com/"   # Ottimis Group ticketing (oglut)
+alias shp="open 'https://ottimis-my.sharepoint.com/my?id=%2Fpersonal%2Fjp_ottimis_com%2FDocuments%2Fworkspace'"   # OneDrive workspace folder (Spotlight: shp.app)
+alias ozan="open http://localhost:8080/next/"   # Spotlight: zan.app
 alias ber="open http://100.115.194.118:8094"   # BLOR prod errors from CloudWatch, served from the Mini (blor-errors/)
 alias wwg="open http://100.115.194.118:8095"   # WhiteWindow practice game, served from the Mini (withoutMouse/game_server.py)
-alias oq="open http://localhost:8079"   # OG-QR_Web local (docker compose)
+alias fbr="open http://100.115.194.118:8097"   # File Browser (AI uploads land in ~/files), served from the Mini (docker/filebrowser/)
+alias oqr="open https://mac-mini-james.tail3429f9.ts.net:8443"   # OG-QR_Web on the Mini
+alias obf="open https://mac-mini-james.tail3429f9.ts.net:3443"   # blor-fe on the Mini
+alias obr="open http://localhost:4200"   # B-Revolution local
+alias opbr="open https://revolution.blorcompany.com"   # B-Revolution prod
 alias tb="open http://test-01.otm.ai:9000/#!/1/docker/containers"
 alias oclick="open https://app.clickup.com/2462893/time"
 alias odeep="open https://chat.deepseek.com/"
-alias nb='open -a "Firefox Developer Edition" "https://new.blorcompany.com?token=pippo"'
+alias nb='open -a "Google Chrome" "https://new.blorcompany.com?token=pippo"'
 alias hostbillconnect="ssh hostbill@83.217.190.28"
+alias msh='wezterm cli spawn -- ssh minish >/dev/null'   # new WezTerm tab ssh-ed into the Mini (Spotlight: msh.app)
 
 # ============================================================
 # Personal apps & misc
@@ -363,7 +372,7 @@ op() {
 
     extension="${file##*.}"
     case "${extension:l}" in
-      pdf) tdf -- "$file" || return ;;
+      pdf) tdf -m 1 -- "$file" || return ;;
       png|svg|webp|jpg|jpeg) chafa -- "$file" || return ;;
       mp4|mkv)
         if [[ "$TERM_PROGRAM" == WezTerm || "$TERM" == xterm-kitty ]]; then

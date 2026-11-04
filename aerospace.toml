@@ -135,8 +135,8 @@ on-mode-changed = []
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
     alt-1 = 'workspace 1'
     alt-2 = 'workspace 2'
-    alt-3 = 'workspace 3'
-    alt-4 = 'workspace 4'
+    # alt-3 is used by Blackout (~/Personal/Projects/blackout) to mask the screen
+    # alt-4 is used by Karabiner to open Clipioo
     alt-5 = 'workspace 5'
     alt-6 = 'workspace 6'
     alt-7 = 'workspace 7'
@@ -244,6 +244,10 @@ on-mode-changed = []
 
 [[on-window-detected]]
     if.app-id = 'org.mozilla.firefoxdeveloperedition'
+    run = 'move-node-to-workspace F'
+
+[[on-window-detected]]
+    if.app-id = 'com.google.Chrome'
     run = 'move-node-to-workspace F'
 
 [[on-window-detected]]

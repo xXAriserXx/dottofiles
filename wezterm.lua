@@ -39,6 +39,21 @@ config.font_size = 25
 config.enable_tab_bar = true
 config.window_decorations = "RESIZE"
 config.color_scheme = "Catppuccin Latte"
+-- Light tab bar to match Catppuccin Latte (the default frame is dark)
+config.window_frame = {
+  active_titlebar_bg = "#dce0e8",
+  inactive_titlebar_bg = "#dce0e8",
+}
+config.colors = {
+  tab_bar = {
+    background = "#dce0e8",
+    active_tab = { bg_color = "#eff1f5", fg_color = "#4c4f69" },
+    inactive_tab = { bg_color = "#ccd0da", fg_color = "#5c5f77" },
+    inactive_tab_hover = { bg_color = "#bcc0cc", fg_color = "#4c4f69" },
+    new_tab = { bg_color = "#dce0e8", fg_color = "#5c5f77" },
+    new_tab_hover = { bg_color = "#bcc0cc", fg_color = "#4c4f69" },
+  },
+}
 config.enable_scroll_bar = false
 config.audible_bell = "SystemBeep"
 config.enable_kitty_graphics = true   -- off by default; yazi/imgview uses the kitty image protocol

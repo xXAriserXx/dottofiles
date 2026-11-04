@@ -391,10 +391,10 @@
     fi
 
     # Styling for different parts of Git status.
-    local       meta='%7F' # white foreground
-    local      clean='%0F' # black foreground
-    local   modified='%0F' # black foreground
-    local  untracked='%0F' # black foreground
+    local       meta='%F{#4c4f69}' # dark text (Latte black is too light)
+    local      clean='%F{#4c4f69}' # dark text
+    local   modified='%F{#4c4f69}' # dark text
+    local  untracked='%F{#4c4f69}' # dark text
     local conflicted='%1F' # red foreground
 
     local res
@@ -551,7 +551,7 @@
 
   ###################[ command_execution_time: duration of the last command ]###################
   # Execution time color.
-  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND=0
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND='#4c4f69'
   typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND=3
   # Show duration of the last command if takes at least this many seconds.
   typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=3
