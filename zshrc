@@ -333,7 +333,7 @@ alias tb="open http://test-01.otm.ai:9000/#!/1/docker/containers"
 alias oclick="open https://app.clickup.com/2462893/time"
 alias odeep="open https://chat.deepseek.com/"
 alias nb='open -a "Google Chrome" "https://new.blorcompany.com?token=pippo"'
-alias hostbillconnect="ssh hostbill@83.217.190.28"
+alias hbs="ssh hostbill@83.217.190.28"
 alias msh='wezterm cli spawn -- ssh minish >/dev/null'   # new WezTerm tab ssh-ed into the Mini (Spotlight: msh.app)
 
 # ============================================================
