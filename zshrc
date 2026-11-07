@@ -11,7 +11,6 @@ typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 # ============================================================
 export PATH="/Users/james/.local/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
-export PATH="/Users/james/.antigravity/antigravity/bin:$PATH"   # Antigravity
 export EDITOR="nvim"
 export AWS_PROFILE="jp"
 alias awsl="aws sso login --profile jp"   # one login covers both profiles: jp (JPDev) and blorteam (BlorTeam)
@@ -30,9 +29,6 @@ case ":$PATH:" in
 esac
 # pnpm end
 
-# nvm
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 # Android SDK (brew cask android-commandlinetools) for Expo / React Native builds; puts adb on PATH
 export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
@@ -50,13 +46,10 @@ alias rzsh="source ~/.zshrc"
 alias zsh='h && nvim .zshrc'   # edit this config (NB: shadows the zsh binary)
 alias c='clear'
 alias h='cd ~'
-alias e='cd'
 alias ..="cd .."
 alias t='touch'
 alias md='mkdir'
-alias rd='rmdir'
 alias n='nvim'
-alias nv='code -n'             # new VS Code window
 alias cb='pbcopy <'            # copy file contents to clipboard: cb <file>
 alias fs='du -sh'              # folder size
 alias cs='du -sh *'            # size of each item inside a folder
@@ -78,32 +71,6 @@ alias odc="open ~/Documents"    # Finder on Documents
 alias odw="open ~/Downloads"    # Finder on Downloads
 alias dotto="cd ~/Documents/dottofiles"
 alias wk="cd ~/Work"
-alias pj="cd ~/Work/Projects"
-alias wdata="cd ~/Work/Data"
-alias warch="cd ~/Work/Archive"
-alias pers="cd ~/Personal"
-alias ppr="cd ~/Personal/Projects"
-alias pdocs="cd ~/Personal/Docs"
-alias parch="cd ~/Personal/Archive"
-alias psvc="cd ~/Personal/Services"
-alias life="cd ~/Personal/Docs/life"
-alias fil="cd ~/Personal/Docs/life/filippino"
-alias eng="cd ~/Personal/Docs/life/inglese"
-alias jt="cd ~/Desktop/just-try"
-alias tl="dc && cd .traveler_logs"
-alias play="dc && cd work/playground"
-alias fuse='dc && cd useful'
-alias fvim='fuse && cd vim'
-alias fmov="dc && cd movies"
-alias fmus="dc && cd music"
-alias media="dc && cd media"
-alias video="media && cd video"
-alias audio="media && cd audio"
-alias image="media && cd image"
-alias testing="de && cd test"
-alias next="cd ~/nextcloud-files/admin/files"
-alias kaizen='cd "$HOME/Library/CloudStorage/GoogleDrive-jrjrjrpr365@gmail.com/My Drive/DriveSyncFiles/kaizen"'
-alias greyrat="cd ~/Personal/Docs/greyrat-vault"
 alias zan="cd ~/Personal/Projects/zanoba"
 
 # ============================================================
@@ -122,7 +89,6 @@ alias bf="bprod && cd blor-fe && clear"
 alias ship="gck main && gmg crm-release && gps && gck staging && gmg main && gps && gck crm-release"
 alias shipblor="br && ship && bb && ship"
 alias xray="cd ~/Work/Projects/blor/Blorcompany.com && php tools/codebase-analyzer.php && python3 tools/_build_xray.py && open tools/codebase-xray.html"
-alias oxray="open ~/Work/Projects/blor/Blorcompany.com/tools/codebase-xray.html"
 
 # Unidata
 alias myfee="cd ~/Work/Projects/unidata/myunidata-fe"
@@ -136,21 +102,7 @@ alias map="open ~/Work/Projects/hostbill_new/docs/hostbill-map/index.html"
 alias pdf='open "$(ls -t ~/Work/Projects/hostbill_new/output/pdf/*.html | head -1)"'
 
 # OG-QR
-alias qr="cd ~/Work/Projects/qr-code"
-alias qrw="qr && cd OG-QR_Web"
-alias qre="qr && cd OG-QR"
-
-# Other projects
-alias pny="cd ~/Personal/Projects/pinoy-marketplace"
-alias lea="cd ~/Personal/Projects/leamor"
-alias vl="cd ~/Personal/Projects/Volleyball"
-alias vldev="vl && npm run dev"
-alias rp="cd ~/Work/Projects/reseller-portal"
-alias rpa="cd ~/Work/Projects/reseller-portal/backend"
-alias rpf="cd ~/Work/Projects/reseller-portal/frontend"
-alias zeus_be='cd /Users/dumitruzanogea/Documents/Progetti/New-Zeus/zeus-be'
-alias zeus_fe='cd /Users/dumitruzanogea/Documents/Progetti/New-Zeus/zeus-fe'
-alias adb_dir='root && cd Library/Android/sdk/platform-tools'
+alias qrw="cd ~/Work/Projects/qr-code/OG-QR_Web"
 
 # ============================================================
 # Dev — run / build / install
@@ -163,8 +115,6 @@ alias pretty="npx prettier --write ."
 alias nyan="blor && ike"
 alias goo="Blor && npm run start"
 alias via='nohup npm run start > app.log 2>&1 & disown'   # detached npm start, logs to app.log
-alias p="gop && node script.js"
-alias gop="cd && cd Documents/work/pwd"
 alias gp="dc && cd tests && node logHello.js"
 alias iru='cd ~/drills/understanding && claude "drill me"'   # retrieval-practice drill
 alias irw='cd ~/drills/understanding && claude "concept write-up"'   # write derived concepts into concepts.md from memory, coach grades
@@ -181,34 +131,13 @@ alias doc='sigma && docker run -p 3000:3000 blor-fe'
 # Blor stack via the root blor/ docker-compose.yaml. Each frontend's
 # depends_on pulls the whole backend (web + mariadb + redis), so naming
 # just the frontend is enough. bprod cds into blor/ where the compose lives.
-alias d="bprod && docker compose up"                     # everything
-alias dfe="bprod && docker compose up blor-fe"           # storefront + backend
-alias drev="bprod && docker compose up b-revolution"     # admin + backend
-alias ddown="bprod && docker compose down"               # stop ALL (whatever was started)
 # Volleyball stack (Docker Compose app + MariaDB)
-alias vlup="volleyball_stack_up"
-alias vldown="volleyball_stack_down"
-alias vlmini="volleyball_stack_remote"
 # bstack shortcuts (function defined in Functions section)
 alias bm="bstack remote"   # blor on the Mini (default work mode)
 alias bl="bstack local"    # blor fully local (local DB, seeded from latest backup)
 alias bs="bstack status"   # which mode am I in?
 alias bn="bstack restart"  # restart containers on the mini
 alias bx="bstack down"     # take down all containers on the mini
-# Zeus
-alias start_zeus_old='root && docker start zeus20-php-web-1'
-alias start_zeus_all='root && docker start zeus-be-web-1 && zeus_fe && ns'
-alias launch_ng="root && open -a 'Google Chrome' 'www.localhost:4200'"
-alias launch_ionic="root && open -a 'Google Chrome' 'www.localhost:8100'"
-
-# ============================================================
-# Kubernetes
-# ============================================================
-alias kbgn="kubectl get namespaces"
-alias kbgp="kubectl get pods"
-alias kbblor="kubectl get pods -n blor"
-alias kbbfe="kubectl exec -it blor-fe-5d58567b46-knbrr -n blor -- /bin/bash"
-alias temporary="kubectl cp ~/Work/Projects/blor/Blorcompany.com/src/app/vendor/ottimis/phplibs/src/dataBase.php blor/blor-be-6fcd79c89c-xvrrp:/var/www/html/app/vendor/ottimis/phplibs/src/dataBase.php"
 
 # ============================================================
 # Git & GitHub
@@ -236,120 +165,32 @@ alias ghard="git reset --hard HEAD~1"
 alias grm="git remote -v"
 alias gdiff="git diff --cached HEAD > diff.txt"
 alias pull_branches='git remote update origin --prune'
-alias ghls="gh repo list"
-alias cloneblor='cd ~/Work/Projects && if [ ! -d blor ]; then mkdir -p blor && cd ~/Work/Projects/blor && git clone git@github.com:ottimis/blor-fe.git && git clone git@github.com:ottimis/Blorcompany.com.git && git clone git@github.com:ottimis/B-Revolution.git && echo "Successfully cloned all repositories."; else echo "Folder blor already exists. Stopping."; fi'
-
-# ============================================================
-# tmux
-# ============================================================
-alias tms="tmux new-session -s"
-alias tuni="tmux attach -t my-uni"
-alias ttl="tmux attach -t logs"
-alias tbl="tmux attach -t blor"
-
 # ============================================================
 # Editors & AI tools
 # ============================================================
-alias cnvim="h && nvim .config/nvim/init.lua"
-alias ncom="nvim /Users/james/Documents/dottofiles/nvim/KEYMAPS.md"
-alias aeroConf="nvim ~/Documents/dottofiles/aerospace.toml"
-alias op1='code -n /Users/jamesjames/Documents/work/projects/blor-fe'
-alias op2='code -n /Users/jamesjames/Documents/work/projects/old-blor/blor-fe'
 alias cl="claude"
-alias cls='cd ~ && claude --model sonnet'   # claude in home folder, Sonnet model
-alias clh='cd ~ && claude --model haiku'   # claude in home folder, Haiku model
-alias cx="codex"
-alias ima="/Users/jrprecilla/Documents/work/projects/control/ima"
-# Gemini CLI: Daily Note
-alias dn='/Users/james/Library/CloudStorage/GoogleDrive-jrjrjrpr365@gmail.com/My\ Drive/DriveSyncFiles/kaizen/Config/dn.sh'
-
-# ============================================================
-# Media & downloads
-# ============================================================
-alias yt='yt-dlp'
-alias ytm='yt-dlp -x'
-alias ytmm='yt-dlp -f "bestaudio"'
-alias mu="mpv --no-video"
-alias vi="mpv --loop --fs"     # NB: shadows vi the editor
-alias vlc='open -a VLC'
-alias y='yazi'                 # terminal file browser
-alias makete="audio && mu 'funk universo x ragna crimson (makete kate) [M2VSd6gEO54].m4a'"
-alias stark="video && mpv --fullscreen stark.mp4"
-
-# ============================================================
-# Audio & bluetooth
-# ============================================================
-alias blip="blueutil --paired"
-alias blco="blueutil --connect"
-alias switch="SwitchAudioSource -t output -s"
-alias switchMic="SwitchAudioSource -t input -s"
-alias ausource="SwitchAudioSource -a"
-alias alexa="blco 08-12-a5-91-ef-cd && switch 'Echo Dot-43W'"
-alias aumac="switch 'MacBook Air Speakers'"
-alias hyper="switch 'HyperX QuadCast S'"
-alias micmac="switch 'MacBook Air Microphone'"
 
 # ============================================================
 # Open URLs & remotes
 # ============================================================
-alias ohost="open https://unistack-dev.unidata.it"
-alias ohostad="open https://unistack-dev.unidata.it/admin/"
-alias edit='open "https://unistack-dev.unidata.it/admin/?cmd=theme_config&action=config&id=1"'
 alias uni='open "https://unistack-dev.unidata.it/admin/index.php?cmd=unidata"'
-alias ouni=uni   # old name
 alias unm='open "https://unistack-dev.unidata.it/admin/index.php?cmd=unidata&view=mappings"'
-alias omyfe="open https://git.uniot.eu/ottimis/myunidata-fe"
-alias omybe="open https://git.uniot.eu/ottimis/myunidata-be"
-alias obblor="open https://github.com/ottimis/Blorcompany.com"
-alias oblor="open https://github.com/ottimis/blor-fe"
-alias orev="open https://github.com/ottimis/B-Revolution"
 alias gha="open https://github.com/ottimis/B-Revolution/actions https://github.com/ottimis/Blorcompany.com/actions https://github.com/ottimis/blor-fe/actions"
-alias action=gha   # old name
-alias oportb="open https://docker.blorcompany.com/#!/2/docker/containers"
-alias oportu="open https://portainer.unidata.it/#!/home"
-alias oporto="open http://test-01.otm.ai:9000/#!/1/docker/containers"
 alias opm='open "http://100.115.194.118:9000/#!/3/docker/dashboard"'
-alias opt='open "http://test-01.otm.ai:9000"'   # Portainer on test-01
 alias ali="open http://100.115.194.118:8092"   # this file's aliases/functions, served from the Mini (shortcuts-web/)
-alias oalias=ali   # old name
-alias kbd="open http://100.115.194.118:8093"   # AeroSpace/Karabiner keyboard view, served from the Mini (keyboard-web/)
-alias okeys=kbd   # old name
 alias vnc="open vnc://james@100.115.194.118"   # Screen Sharing to the Mini (Spotlight: vnc.app)
 alias json="open http://100.115.194.118:8888/json-prettify"   # IT-Tools JSON viewer, served from the Mini (~/docker/it-tools)
 alias anal='open "https://analytics.google.com/analytics/web/?authuser=4#/a89123432p399578620/reports/intelligenthome"'   # Blor GA4 home
 alias meta='open "https://business.facebook.com/latest/business_home?business_id=877574692394692"'   # Blor Meta Business home
 alias ogl="open https://ottimis-group.ticket.oglut.com/"   # Ottimis Group ticketing (oglut)
 alias shp="open 'https://ottimis-my.sharepoint.com/my?id=%2Fpersonal%2Fjp_ottimis_com%2FDocuments%2Fworkspace'"   # OneDrive workspace folder (Spotlight: shp.app)
-alias ozan="open http://localhost:8080/next/"   # Spotlight: zan.app
 alias ber="open http://100.115.194.118:8094"   # BLOR prod errors from CloudWatch, served from the Mini (blor-errors/)
-alias wwg="open http://100.115.194.118:8095"   # WhiteWindow practice game, served from the Mini (withoutMouse/game_server.py)
-alias fbr="open http://100.115.194.118:8097"   # File Browser (AI uploads land in ~/files), served from the Mini (docker/filebrowser/)
-alias oqr="open https://mac-mini-james.tail3429f9.ts.net:8443"   # OG-QR_Web on the Mini
-alias obf="open https://mac-mini-james.tail3429f9.ts.net:3443"   # blor-fe on the Mini
-alias obr="open http://localhost:4200"   # B-Revolution local
-alias opbr="open https://revolution.blorcompany.com"   # B-Revolution prod
 alias tb="open http://test-01.otm.ai:9000/#!/1/docker/containers"
-alias oclick="open https://app.clickup.com/2462893/time"
-alias odeep="open https://chat.deepseek.com/"
-alias nb='open -a "Google Chrome" "https://new.blorcompany.com?token=pippo"'
-alias hbs="ssh hostbill@83.217.190.28"
-alias msh='wezterm cli spawn -- ssh minish >/dev/null'   # new WezTerm tab ssh-ed into the Mini (Spotlight: msh.app)
-
 # ============================================================
 # Personal apps & misc
 # ============================================================
 alias navicat='~/Documents/dottofiles/navicat-premium-reset-trial/reset-trial.sh'
-alias fool='cd && cd Desktop/fool/native/ && .build/release/FoolApp'
-alias key='launchctl bootout "gui/$(id -u)/com.james.whitewindow" 2>/dev/null; sleep 1; launchctl bootstrap "gui/$(id -u)" ~/Library/LaunchAgents/com.james.whitewindow.plist'   # (re)load agent + start app
-alias ww='~/Personal/Projects/withoutMouse/.build/release/WhiteWindow & disown'   # add --zoom after WhiteWindow for the zoom panel
-alias killww='launchctl bootout "gui/$(id -u)/com.james.whitewindow" 2>/dev/null; pkill -f .build/release/WhiteWindow'   # stop both: installed agent app + ww dev build
-alias rblor="wk && cd reminders && cat blor.txt"
-alias pass='dc && cd work && n pwd.json'
 alias pwds="n ~/Personal/Docs/greyrat-vault/pwds"
-alias 1p='command op'   # 1Password CLI (`op` is the file viewer function below)
-alias secret='say nandodemo'
-alias wsq='launchctl bootout "gui/$(id -u)/com.james.wsq" 2>/dev/null; launchctl bootstrap "gui/$(id -u)" ~/overlay/com.james.wsq.plist'   # random workspace prompt every 30s (apps only, no letter), runs without a terminal
-alias wsqstop='launchctl bootout "gui/$(id -u)/com.james.wsq"; pkill -x overlay'   # stop it + hide any overlay
 
 # ============================================================
 # Functions (defined after the aliases they use)
@@ -383,65 +224,34 @@ op() {
         fi
         ;;
       mp3|m4a) mpv --no-video -- "$file" || return ;;
+      json) jless -- "$file" || return ;;
       xls|xlsx|csv) vd -- "$file" || return ;;
+      numbers)
+        # no vd loader: convert every table to an xlsx sheet first
+        local xlsx="${TMPDIR:-/tmp}/op-${file:t:r}.xlsx"
+        uvx --quiet --with numbers-parser --with openpyxl python -c '
+import sys; from numbers_parser import Document; from openpyxl import Workbook
+wb = Workbook(); wb.remove(wb.active)
+for s in Document(sys.argv[1]).sheets:
+    for t in s.tables:
+        ws = wb.create_sheet((s.name if len(s.tables) == 1 else f"{s.name}-{t.name}")[:31])
+        rows = t.rows(values_only=True)
+        while rows and all(v is None for v in rows[-1]): rows.pop()
+        for row in rows: ws.append(row)
+wb.save(sys.argv[2])' "$file" "$xlsx" && vd -- "$xlsx"
+        local rc=$?; rm -f "$xlsx"; (( rc == 0 )) || return $rc
+        ;;
+      docx)
+        local md="${TMPDIR:-/tmp}/op-${file:t:r}.md"
+        pandoc -f docx -t gfm --wrap=none -o "$md" -- "$file" && mdr "$md"
+        local rc=$?; rm -f "$md"; (( rc == 0 )) || return $rc
+        ;;
+      doc) textutil -convert txt -stdout -- "$file" | less || return ;;
       *) print -u2 "op: unsupported format: $file"; return 2 ;;
     esac
   done
 }
 
-# Start or stop the Volleyball Docker Compose stack
-volleyball_stack_up() {
-  if ! docker info >/dev/null 2>&1; then
-    echo "⏳ Starting Docker Desktop..."
-    open --background -a "Docker Desktop"
-    while ! docker info >/dev/null 2>&1; do sleep 1; done
-  fi
-  vl && docker compose up -d --build
-}
-
-volleyball_stack_down() {
-  vl && docker compose down
-}
-
-volleyball_stack_remote() {
-  local mini="james@100.115.194.118"
-  ssh "$mini" 'cd ~/volleyball && APP_PORT=3001 ADMIN_ORIGIN=http://localhost:3001 docker compose up -d --build --wait' || return 1
-  pkill -f "ssh -f -N -L 3001:localhost:3001" 2>/dev/null
-  ssh -f -N -L 3001:localhost:3001 "$mini" &&
-    echo "✅ Volleyball up on mini + tunnel → localhost:3001"
-}
-
-# Android: connect adb over wifi — connect_android <port>
-connect_android() {
-  adb_dir && adb connect 192.168.0.50:${1}
-}
-
-# Start Docker daemon if needed, then the Zeus stack
-function start_zeus() {
-  if ! docker info > /dev/null 2>&1; then
-    echo "🚀 Avvio del Docker daemon..."
-    open --background -a Docker # per macOS
-  fi
-
-  echo "⏳ Attendo che Docker sia pronto..."
-  while ! docker info > /dev/null 2>&1; do
-    sleep 1
-  done
-  echo "✅ Docker è pronto!"
-
-  echo "📦 Avvio container Docker..."
-  docker start zeus-be-web-1
-
-  echo "🌐 Avvio frontend Angular..."
-  zeus_fe && ns
-}
-
-# Download a song into ~/songs — dwm <url>
-function dwm () {
-	cd;
-	cd songs;
-	ytmm "$1"
-}
 
 # Pre-push checklist, then git push
 gps() {
@@ -551,13 +361,3 @@ opencode() {
 # Rotate the OpenRouter key in the Keychain (prompts for the new key, nothing in history)
 alias orkey='security add-generic-password -U -a "$USER" -s openrouter-api-key -w'
 
-
-# ============================================================
-# Boomi API daily quiz gate (first interactive terminal of the day)
-# — keep last so it runs after everything is set up
-# ============================================================
-alias boomi-quiz="python3 /Users/james/.boomi-quiz/app/boomi_quiz.py"
-# disabled 2026-08-26 — run `boomi-quiz` manually instead
-# if [[ -o interactive ]] && [ -t 0 ]; then
-#   python3 /Users/james/.boomi-quiz/app/boomi_quiz.py --gate
-# fi
