@@ -175,6 +175,7 @@ alias cl="claude"
 # ============================================================
 alias uni='open "https://unistack-dev.unidata.it/admin/index.php?cmd=unidata"'
 alias unm='open "https://unistack-dev.unidata.it/admin/index.php?cmd=unidata&view=mappings"'
+alias opu="open 'https://portainer.unidata.it/#!/home'"   # Unidata Portainer (Spotlight: opu.app)
 alias gha="open https://github.com/ottimis/B-Revolution/actions https://github.com/ottimis/Blorcompany.com/actions https://github.com/ottimis/blor-fe/actions"
 alias opm='open "http://100.115.194.118:9000/#!/3/docker/dashboard"'
 alias ali="open http://100.115.194.118:8092"   # this file's aliases/functions, served from the Mini (shortcuts-web/)
@@ -185,7 +186,7 @@ alias meta='open "https://business.facebook.com/latest/business_home?business_id
 alias ogl="open https://ottimis-group.ticket.oglut.com/"   # Ottimis Group ticketing (oglut)
 alias shp="open 'https://ottimis-my.sharepoint.com/my?id=%2Fpersonal%2Fjp_ottimis_com%2FDocuments%2Fworkspace'"   # OneDrive workspace folder (Spotlight: shp.app)
 alias ber="open http://100.115.194.118:8094"   # BLOR prod errors from CloudWatch, served from the Mini (blor-errors/)
-alias tb="open http://test-01.otm.ai:9000/#!/1/docker/containers"
+alias opt="open http://test-01.otm.ai:9000"   # test-01 Portainer (Spotlight: opt.app)
 # ============================================================
 # Personal apps & misc
 # ============================================================
